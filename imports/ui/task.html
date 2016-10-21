@@ -1,0 +1,18 @@
+<template name="task">
+  <li class="{{#if checked}}checked{{/if}}">
+  <button class="delete">&times;</button>
+Starred<input type="checkbox"/>
+Completed<input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+  <h1 class="subject">Subject</h1>
+  <a href="{{pathFor 'Lists.show' _id=list._id}}" title="{{list.name}}"
+    class="list-todo {{activeListClass list}}"><span>{{createdAt}}</span></a>
+  <span class="text">{{text}}</span>
+  <button>Feature</button><button>Feature</button>
+  </li>
+  <li>
+  Next Step <button>Done</button>
+  </li>
+  <li>
+  Previous Steps <button>{{username}}</button>
+  </li>
+</template>
