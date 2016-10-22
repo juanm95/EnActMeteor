@@ -1,7 +1,7 @@
 FlowRouter.route('/', {
   name: 'Issues.all',
   action(params, queryParams) {
-    BlazeLayout.render('Page_Template', { main: 'ListOfIssues'});
+    BlazeLayout.render('Page_Template', { main: 'displayAllIssues'});
   }
 });
 

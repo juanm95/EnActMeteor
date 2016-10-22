@@ -3,12 +3,7 @@
   <div class="container">
     <header>
       <h1>EnAct</h1><button>Worked On</button><button>Favorites</button><button>Settings</button>
-
-      <label class="hide-completed">
-        <input type="checkbox" />
-        Hide Completed Tasks
-      </label>
-
+      
       {{> loginButtons}}
 
       {{#if currentUser}}
@@ -17,19 +12,7 @@
       </form>
       {{/if}}
     </header>
-  {{> Template.dynamic template=main}}
+    {{> Template.dynamic template=main }}
   </div>
 </body>
-</template>
-
-<template name="ListOfTasks">
-<ul>
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-    </ul>
-</template>
-
-<template name="ShowTask">
-{{text}}
 </template>

@@ -1,0 +1,11 @@
+<template name="displayAllIssues">
+      <label class="hide-completed">
+        <input type="checkbox" />
+        Hide Completed Tasks
+      </label>
+  <ul>
+    {{#each tasks}}
+    {{> task}}
+    {{/each}}
+  </ul>
+</template>

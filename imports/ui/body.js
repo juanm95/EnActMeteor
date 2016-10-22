@@ -1,27 +1,18 @@
-import { Meteor } from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Tasks } from '../api/tasks.js';
 
 // Template imports
-import './task.js';
 import './body.html';
+import './displayAllIssues.js';
+import './ShowIssue.js'
 
-Template.body.onCreated(function bodyOnCreated() {
-  this.state = new ReactiveDict() // Blaze
-})
+Template.ShowIssue.onCreated(function listsShowPageOnCreated() {
+  this.getListId = () => FlowRouter.getParam('_id');
+});
 
-Template.body.helpers({
-  tasks() {
-    const instance = Template.instance();
-    if (instance.state.get('hideCompleted')) {
-      return Tasks.find({ checked: {$ne: true} }, { sort: {createdAt: -1 } });
-    }
-    return Tasks.find({}, { sort: { createdAt: -1 } });
-  },
-})
-
-Template.body.events({
+Template.Page_Template.events({
   'submit .new-task'(event) {
     event.preventDefault();
 
@@ -36,8 +27,5 @@ Template.body.events({
     });
 
     target.text.value = '';
-  },
-  'change .hide-completed input'(event, instance) {
-    instance.state.set('hideCompleted', event.target.checked);
   }
 })
