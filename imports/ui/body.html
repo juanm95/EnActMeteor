@@ -6,6 +6,10 @@
       
       {{> loginButtons}}
 
+      {{#if currentUserIsAdmin}}
+        I am admin.
+      {{/if}}
+
       {{#if currentUser}}
       <form class="new-task">
         <input type="text" name="text" placeholder="Search" />

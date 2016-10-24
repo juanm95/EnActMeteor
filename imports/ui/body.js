@@ -8,8 +8,15 @@ import './body.html';
 import './displayAllIssues.js';
 import './ShowIssue.js'
 
-Template.ShowIssue.onCreated(function listsShowPageOnCreated() {
-  this.getListId = () => FlowRouter.getParam('_id');
+Template.Page_Template.helpers({
+  currentUserIsAdmin() {
+    doc = Meteor.users.findOne()
+    if (doc === undefined) {
+      return false;
+    }
+    console.log(doc)
+    return doc.admin === "true";
+  }
 });
 
 Template.Page_Template.events({

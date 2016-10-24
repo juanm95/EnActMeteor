@@ -1,3 +1,4 @@
+import { Tasks } from '../api/tasks.js';
 
 import './ShowIssue.html'
 
@@ -11,14 +12,12 @@ Template.ShowIssue.onCreated(function listsShowPageOnCreated() {
 });
 
 Template.ShowIssue.helpers({
-  // We use #each on an array of one item so that the "list" template is
-  // removed and a new copy is added when changing lists, which is
-  // important for animation purposes.
-  listIdArray() {
+  tasks() {
     const instance = Template.instance();
     const listId = instance.getListId();
-    return listId
-  },
+    task = Tasks.find( { _id: listId } );
+    return task
+  }
   // listArgs(listId) {
   //   const instance = Template.instance();
   //   // By finding the list with only the `_id` field set, we don't create a dependency on the
