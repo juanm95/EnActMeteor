@@ -1,8 +1,10 @@
 /* CSS declarations go here */
 body {
   font-family: sans-serif;
-  background-color: #315481;
-  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+  /*background-color: #315481;*/
+
+  background-color: #29120C;
+  /*background-image: linear-gradient(to bottom, #315481, #918e82 100%);*/
   background-attachment: fixed;
  
   position: absolute;
@@ -12,27 +14,45 @@ body {
   right: 0;
  
   padding: 0;
-  margin: 0;
+  margin: 10;
  
   font-size: 14px;
 }
  
 .container {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 0 auto;
   min-height: 100%;
   background: white;
+  background: #F9EEEC;
+  padding: 30px 50px;
+  border: 5px solid #79431F;
 }
- 
+
 header {
-  background: #d2edf4;
-  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
+  color: #79431F;
+  border-bottom: 2px solid #79431F;
+  /*background: #d2edf4;
+  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);*/
+  font-size: 20px;
   padding: 20px 15px 15px 15px;
   position: relative;
 }
  
 #login-buttons {
   display: block;
+}
+
+.headerButton {
+    background-color: gray;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 6px;
 }
  
 h1 {
