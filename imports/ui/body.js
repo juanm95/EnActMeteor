@@ -5,8 +5,8 @@ import { Tasks } from '../api/tasks.js';
 
 // Template imports
 import './body.html';
-// import './displayAllIssues.js';
-// import './ShowIssue.js'
+import './displayAllIssues.js';
+import './ShowIssue.js'
 
 Template.Page_Template.helpers({
   currentUserIsAdmin() {
