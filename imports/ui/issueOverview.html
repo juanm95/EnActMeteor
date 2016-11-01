@@ -3,15 +3,9 @@
   <button class="delete">&times;</button>
 Starred<input type="checkbox"/>
 Completed<input type="checkbox" checked="{{checked}}" class="toggle-checked" />
-    <h1 class="subject"><a href="/issue/{{_id}}">Subject</a></h1>
+    <h1 class="subject"><a href="/issue/{{_id}}">{{subject}}</a></h1>
   <span>{{createdAt}}</span>
-  <span class="text">{{text}}</span>
+  <span class="text">{{details}}</span>
   <button>Feature</button><button>Feature</button>
-  </li>
-  <li>
-  Next Step <button>Done</button>
-  </li>
-  <li>
-  Previous Steps <button>{{username}}</button>
   </li>
 </template>

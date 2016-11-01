@@ -1,3 +1,14 @@
 <template name="ShowIssue">
+{{#each issues}}
+<h1>{{subject}}</h1>
+<p>{{details}}</p>
 
+{{#each steps}}
+<p>{{text}} by {{username}} at {{createdAt}}</p>
+{{/each}}
+
+<form class="new-step">
+  New Step: <input type="text" name="new-step"/>
+</form>
+{{/each}}
 </template>

@@ -17,24 +17,28 @@ Template.ShowIssue.helpers({
     const listId = instance.getListId();
     issue = Issues.find( { _id: listId } );
     return issue
+  },
+  steps() {
+    const instance = Template.instance();
+    const listId = instance.getListId();
+    issue = Issues.findOne( { _id: listId } );
+    return issue.steps
   }
-  // listArgs(listId) {
-  //   const instance = Template.instance();
-  //   // By finding the list with only the `_id` field set, we don't create a dependency on the
-  //   // `list.incompleteCount`, and avoid re-rendering the todos when it changes
-  //   const list = Lists.findOne(listId, { fields: { _id: true } });
-  //   const todos = list && list.todos();
-  //   return {
-  //     todosReady: instance.subscriptionsReady(),
-  //     // We pass `list` (which contains the full list, with all fields, as a function
-  //     // because we want to control reactivity. When you check a todo item, the
-  //     // `list.incompleteCount` changes. If we didn't do this the entire list would
-  //     // re-render whenever you checked an item. By isolating the reactiviy on the list
-  //     // to the area that cares about it, we stop it from happening.
-  //     list() {
-  //       return Lists.findOne(listId);
-  //     },
-  //     todos,
-  //   };
-  // },
 });
+
+Template.ShowIssue.events({
+  'submit .new-step'(event) {
+    event.preventDefault();
+    stepObject = $("[name='new-step']");
+    const stepText = stepObject.val();
+    const instance = Template.instance();
+    const listId = instance.getListId();
+    Issues.update({
+      _id: listId
+    },
+    { $addToSet: {steps: {text: stepText, createdAt: new Date(), username: Meteor.user().username}}},
+    {}
+    );
+    stepObject.val("");
+  }
+})
