@@ -1,4 +1,4 @@
-import { Tasks } from '../api/tasks.js';
+import { Issues } from '../api/issues.js';
 
 import './ShowIssue.html'
 
@@ -12,11 +12,11 @@ Template.ShowIssue.onCreated(function listsShowPageOnCreated() {
 });
 
 Template.ShowIssue.helpers({
-  tasks() {
+  issues() {
     const instance = Template.instance();
     const listId = instance.getListId();
-    task = Tasks.find( { _id: listId } );
-    return task
+    issue = Issues.find( { _id: listId } );
+    return issue
   }
   // listArgs(listId) {
   //   const instance = Template.instance();

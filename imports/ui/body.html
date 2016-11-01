@@ -6,7 +6,7 @@
       <button class="headerButton">Worked On</button>
       <button class="headerButton">Favorites</button>
       <button class="headerButton">Settings</button>
-      
+
       {{> loginButtons}}
 
       {{#if currentUserIsAdmin}}
@@ -14,8 +14,8 @@
       {{/if}}
 
       {{#if currentUser}}
-      <form class="new-task">
-        <input type="text" name="text" placeholder="Search" />
+      <form class="new-issue">
+        <input type="text" name="text" placeholder="New Issue" />
       </form>
       {{/if}}
     </header>

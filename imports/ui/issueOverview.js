@@ -1,17 +1,17 @@
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Meteor } from 'meteor/meteor';
-import { Tasks } from '../api/tasks.js';
+import { Issues } from '../api/issues.js';
 
-import './task.html'
+import './issueOverview.html'
 
-Template.task.events({
+Template.issueOverview.events({
   'click .toggle-checked'() {
-    Tasks.update(this._id, {
+    Issues.update(this._id, {
       $set: { checked: !this.checked }
     });
   },
   'click .delete'() {
-    Tasks.remove(this._id);
+    Issues.remove(this._id);
   },
 })

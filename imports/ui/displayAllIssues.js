@@ -1,9 +1,9 @@
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { Tasks } from '../api/tasks.js';
+import { Issues } from '../api/issues.js';
 
 // Template imports
-import './task.js';
+import './issueOverview.js';
 import './displayAllIssues.html'
 import './ShowIssue.html'
 
@@ -12,12 +12,13 @@ Template.displayAllIssues.onCreated(function bodyOnCreated() {
 })
 
 Template.displayAllIssues.helpers({
-  tasks() {
+  issues() {
+    console.log("issues is called.")
     const instance = Template.instance();
     if (instance.state.get('hideCompleted')) {
-      return Tasks.find({ checked: {$ne: true} }, { sort: {createdAt: -1 } });
+      return Issues.find({ checked: {$ne: true} }, { sort: {createdAt: -1 } });
     }
-    return Tasks.find({}, { sort: { createdAt: -1 } });
+    return Issues.find({}, { sort: { createdAt: -1 } });
   },
 })
 

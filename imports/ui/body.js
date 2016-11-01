@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { Tasks } from '../api/tasks.js';
+import { Issues } from '../api/issues.js';
 
 // Template imports
 import './body.html';
@@ -20,19 +20,17 @@ Template.Page_Template.helpers({
 });
 
 Template.Page_Template.events({
-  'submit .new-task'(event) {
+  'submit .new-issue'(event) {
     event.preventDefault();
-
-    const target = event.target;
-    const text = target.text.value;
-
-    Tasks.insert({
+    const textBox = event.target
+    const text = textBox.text.value;
+    Issues.insert({
+      subject: "SUBJECT",
       text,
       createdAt: new Date(),
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });
-
-    target.text.value = '';
+    textBox.text.value = '';
   }
 })
