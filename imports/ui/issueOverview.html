@@ -1,11 +1,8 @@
 <template name="issueOverview">
   <li class="{{#if checked}}checked{{/if}}">
-  <button class="delete">&times;</button>
-Starred<input type="checkbox"/>
 Completed<input type="checkbox" checked="{{checked}}" class="toggle-checked" />
     <h1 class="subject"><a href="/issue/{{_id}}">{{subject}}</a></h1>
   <span>{{createdAt}}</span>
   <span class="text">{{details}}</span>
-  <button>Feature</button><button>Feature</button>
   </li>
 </template>
