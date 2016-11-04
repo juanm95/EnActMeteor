@@ -40,20 +40,17 @@
                           // the session
       xfbml      : true,  // parse social plugins on this page
       version    : 'v2.5' // use graph api version 2.5
-    });
+    })
+    FB.api('/CGNetSwara/posts','GET', {},
+    function(response) {
+        console.log(response);
+    }
+    );
 
-  FB.getLoginStatus(function(response) {
-    console.log("Response")
-    console.log(response)
-    if (response.status === 'connected') {
-      var accessToken = response.authResponse.accessToken;
-      console.log("Access Token:")
-      console.log(accessToken)
-    } 
-  } );    
-    FB.api('/CGNetSwara/posts', 'GET', {}, function(response) {
-          console.log(response);
-    });
+  // FB.ui({
+  //   method: 'share',
+  //   href: 'https://developers.facebook.com/docs/'
+  // }, function(response){});
 
     // Now that we've initialized the JavaScript SDK, we call 
     // FB.getLoginStatus().  This function gets the state of the
@@ -80,8 +77,9 @@
     js = d.createElement(s); js.id = id;
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
-    console.log("Successfully loaded shit.")
+    console.log("loaded sdk");
   }(document, 'script', 'facebook-jssdk'));
+
 
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
@@ -93,6 +91,7 @@
         'Thanks for logging in, ' + response.name + '!';
     });
   }
+
 </script>
 
 <!--
