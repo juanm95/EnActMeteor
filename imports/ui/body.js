@@ -16,6 +16,9 @@ Template.Page_Template.helpers({
     }
     console.log(doc)
     return doc.admin === "true";
+  },
+  posts() {
+    
   }
 });
 
