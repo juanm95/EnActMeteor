@@ -9,6 +9,10 @@ import './displayAllIssues.js';
 import './ShowIssue.js'
 
 Template.Page_Template.helpers({
+  addissues() {
+    console.log("add")
+    //console.log(issues)
+  },
   currentUserIsAdmin() {
     doc = Meteor.users.findOne()
     if (doc === undefined) {
@@ -42,4 +46,4 @@ Template.Page_Template.events({
     detailsObject.val("");
     subjectObject.val("");
   }
-})
+});

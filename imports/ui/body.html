@@ -1,5 +1,6 @@
 <template name="Page_Template">
-<body>
+  <body>
+  <p id="issues"></p>
   <script>
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
@@ -11,16 +12,22 @@
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
+      FB.api('/CGNetSwara/posts','GET', {},
+        function(response) {
+          console.log(response);
+          document.getElementById("issues").innerHTML = response;
+        }
+      );
       testAPI();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
+      'into this app.';
     } else {
       // The person is not logged into Facebook, so we're not sure if
       // they are logged into this app or not.
       document.getElementById('status').innerHTML = 'Please log ' +
-        'into Facebook.';
+      'into Facebook.';
     }
   }
 
@@ -41,17 +48,11 @@
       xfbml      : true,  // parse social plugins on this page
       version    : 'v2.5' // use graph api version 2.5
     })
-    FB.api('/CGNetSwara/posts','GET', {},
-    function(response) {
-        console.log(response);
-    }
-    );
-
-  // FB.ui({
-  //   method: 'share',
-  //   href: 'https://developers.facebook.com/docs/'
-  // }, function(response){});
-
+    
+    // FB.ui({
+    //   method: 'share',
+    //   href: 'https://developers.facebook.com/docs/'
+    // }, function(response){}
     // Now that we've initialized the JavaScript SDK, we call 
     // FB.getLoginStatus().  This function gets the state of the
     // person visiting this page and can return one of three states to
@@ -62,12 +63,10 @@
     // 3. Not logged into Facebook and can't tell if they are logged into
     //    your app or not.
     //
-    // These three cases are handled in the callback function.
-
+    // These three cases are handled in the callback functio
     FB.getLoginStatus(function(response) {
       statusChangeCallback(response);
     });
-
   };
 
   // Load the SDK asynchronously
@@ -88,12 +87,11 @@
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
       document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+      'Thanks for logging in, ' + response.name + '!';
     });
   }
-
-</script>
-
+  </script>
+  {{addissues}}
 <!--
   Below we include the Login Button social plugin. This button uses
   the JavaScript SDK to present a graphical Login button that triggers
@@ -109,9 +107,9 @@
 <!--
   Below is the original code w/o FB integration
 -->
-  <div class="container">
-    <header>
-      <h1>EnAct</h1>
+<div class="container">
+  <header>
+    <h1>EnAct</h1>
 <!--       <button class="headerButton">Worked On</button>
       <button class="headerButton">Favorites</button>
       <button class="headerButton">Settings</button> -->
@@ -119,7 +117,7 @@
       {{> loginButtons}}
 
       {{#if currentUserIsAdmin}}
-        I am admin.
+      I am admin.
       {{/if}}
 
       {{#if currentUser}}
@@ -130,6 +128,8 @@
       </form>
       {{/if}}
     </header>
+
+    
     <!-- {{> Template.dynamic template=main }} -->
     {{#each posts}}
     {{message}}
