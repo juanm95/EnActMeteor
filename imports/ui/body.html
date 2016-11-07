@@ -16,6 +16,10 @@
         function(response) {
           console.log(response);
           document.getElementById("issues").innerHTML = response;
+          Issues.insert({
+            facebookID: response.data[0].id,
+            username: Meteor.user().username,
+          });
         }
       );
       testAPI();

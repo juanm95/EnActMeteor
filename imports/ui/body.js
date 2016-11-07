@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { Issues } from '../api/issues.js';
+import '../api/issues.js';
 
 // Template imports
 import './body.html';
