@@ -22,7 +22,7 @@ Template.Page_Template.helpers({
     return doc.admin === "true";
   },
   posts() {
-    
+    return Issues.find({});
   }
 });
 

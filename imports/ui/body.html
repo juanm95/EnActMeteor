@@ -12,11 +12,12 @@
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      FB.api('/CGNetSwara/posts','GET', {},
+      FB.api('/CGNetSwara/feed?fields=permalink_url','GET', {},
         function(response) {
           console.log(response);
           document.getElementById("issues").innerHTML = response;
           Issues.insert({
+            url: response.data[0].permalink_url,
             facebookID: response.data[0].id,
             username: Meteor.user().username,
           });
@@ -138,7 +139,7 @@
     {{#each posts}}
     {{message}}
     {{id}}
-    https://www.facebook.com/CGNetSwara/posts/{{id}}
+    {{url}}
     <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true"><blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a></blockquote></div>
     {{/each}}
   </div>
