@@ -16,11 +16,13 @@
         function(response) {
           console.log(response);
           document.getElementById("issues").innerHTML = response;
-          Issues.insert({
-            url: response.data[0].permalink_url,
-            facebookID: response.data[0].id,
-            username: Meteor.user().username,
-          });
+          for(i=0; i < response.data.length; i++) {
+            Issues.insert({
+              facebookID: response.data[i].id,
+              creationTime: response.data[i].created_time,
+              description: response.data[i].message
+            });
+          }
         }
       );
       testAPI();
