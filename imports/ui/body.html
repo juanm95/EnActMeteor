@@ -137,9 +137,6 @@
     
     <!-- {{> Template.dynamic template=main }} -->
     {{#each posts}}
-    {{message}}
-    {{id}}
-    {{url}}
     <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true"><blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a></blockquote></div>
     {{/each}}
   </div>
