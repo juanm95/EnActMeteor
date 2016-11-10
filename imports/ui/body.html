@@ -12,17 +12,53 @@
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      FB.api('/CGNetSwara/feed?fields=permalink_url','GET', {},
+      FB.api('/CGNetSwara/feed?fields=permalink_url, created_time, shares','GET', {},
         function(response) {
           console.log(response);
           document.getElementById("issues").innerHTML = response;
-          for(i=0; i < response.data.length; i++) {
-            Issues.insert({
-              facebookID: response.data[i].id,
-              creationTime: response.data[i].created_time,
-              description: response.data[i].message
-            });
+          //issues.createIndex( { "facebookID": 1 }, { unique: true } )
+          databaseEmpty = false
+          count = Issues.find({}).count()
+          console.log(count)
+          if(count == 0){
+            databaseEmpty = true
           }
+          console.log(databaseEmpty)
+          for(i=0; i < response.data.length; i++) {
+            if(Issues.find({id: response.data[i].id}).count() == 0){
+              Issues.insert({
+                id: response.data[i].id,
+                url: response.data[i].permalink_url,
+                created_time : response.data[i].created_time,
+                shares: response.data[i].shares
+              })
+            }
+
+//             if(databaseEmpty){
+//               console.log("Inserting")
+//               console.log(response)
+//               Issues.insert({
+//                 creationTime : response.data[i].created_time,
+//                 description : response.data[i].message,
+//                 facebookID: response.data[i].id
+//               });
+//             }else{
+//               Issues.update(
+//               {facebookID: response.data[i].id},
+//                 {creationTime : response.data[i].created_time,
+//                 description : response.data[i].message},
+//               {upsert : true}
+//             );
+//             }
+          }
+            // Issues.update(
+            //   {'facebookID': response.data[i].id},
+            //   {$set: {
+            //     'creationTime' : response.data[i].created_time,
+            //     'description' : response.data[i].message
+            //   }},
+            //   {upsert : true}
+            // )
         }
       );
       testAPI();
@@ -139,7 +175,12 @@
     
     <!-- {{> Template.dynamic template=main }} -->
     {{#each posts}}
-    <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true"><blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a></blockquote></div>
+      <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true">
+
+        <blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">
+          <!--Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a>-->
+        </blockquote>
+      </div>
     {{/each}}
   </div>
 </body>
