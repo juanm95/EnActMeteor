@@ -25,40 +25,16 @@
           }
           console.log(databaseEmpty)
           for(i=0; i < response.data.length; i++) {
-            if(Issues.find({id: response.data[i].id}).count() == 0){
-              Issues.insert({
-                id: response.data[i].id,
-                url: response.data[i].permalink_url,
-                created_time : response.data[i].created_time,
-                shares: response.data[i].shares
-              })
-            }
-
-//             if(databaseEmpty){
-//               console.log("Inserting")
-//               console.log(response)
-//               Issues.insert({
-//                 creationTime : response.data[i].created_time,
-//                 description : response.data[i].message,
-//                 facebookID: response.data[i].id
-//               });
-//             }else{
-//               Issues.update(
-//               {facebookID: response.data[i].id},
-//                 {creationTime : response.data[i].created_time,
-//                 description : response.data[i].message},
-//               {upsert : true}
-//             );
-//             }
+            Issues.update({
+              _id: response.data[i].id
+            }, {$set: {
+              url: response.data[i].permalink_url,
+              created_time : response.data[i].created_time,
+              shares: response.data[i].shares
+            }}, {
+              upsert: true
+            });
           }
-            // Issues.update(
-            //   {'facebookID': response.data[i].id},
-            //   {$set: {
-            //     'creationTime' : response.data[i].created_time,
-            //     'description' : response.data[i].message
-            //   }},
-            //   {upsert : true}
-            // )
         }
       );
       testAPI();
