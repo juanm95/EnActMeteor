@@ -8,6 +8,11 @@ import './body.html';
 import './displayAllIssues.js';
 import './ShowIssue.js'
 
+Template.Page_Template.onCreated(function bodyOnCreated() {
+  this.state = new ReactiveDict();
+
+});
+
 Template.Page_Template.helpers({
   addissues() {
     console.log("add")
@@ -23,6 +28,18 @@ Template.Page_Template.helpers({
   },
   posts() {
     return Issues.find({}, {sort : {last_interaction_time: -1} })
+  },
+  tasks() {
+    const instance = Template.instance();
+    if (instance.state.get('show-open')) {
+      // If hide completed is checked, filter tasks
+      return Issues.find({ tags: { $in: ["open"] } }, { sort: { last_interaction_time: -1 } }); //right syntax??
+    }
+    // Otherwise, return all of the tasks
+    return Issues.find({}, { sort: { last_interaction_time: -1 } });
+  },
+  incompleteCount() {
+    return Issues.find({ tags: { $in: ["open"] } }).count();
   }
 });
 
@@ -46,4 +63,7 @@ Template.Page_Template.events({
     detailsObject.val("");
     subjectObject.val("");
   }
+  //'change .show-open input'(event, instance) {
+  //  instance.state.set('show-open', event.target.checked);
+  //},
 });

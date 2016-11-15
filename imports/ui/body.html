@@ -176,6 +176,16 @@
       <button class="headerButton">Favorites</button>
       <button class="headerButton">Settings</button> -->
 
+      <label class="show-open">
+        <input type="checkbox" />
+        Open
+      </label>
+
+      <label class="show-closed">
+        <input type="checkbox" />
+        Closed
+      </label>
+
       {{> loginButtons}}
 
       {{#if currentUserIsAdmin}}
@@ -190,6 +200,8 @@
       </form>
       {{/if}}
     </header>
+
+    <h1>Open ({{incompleteCount}})</h1>
 
     
     <!-- {{> Template.dynamic template=main }} -->
