@@ -194,13 +194,24 @@
     
     <!-- {{> Template.dynamic template=main }} -->
     {{#each posts}}
-      <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true">
+      <div>
+        <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true">
 
-        <blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">
-          <!--Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a>-->
-        </blockquote>
+          <blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">
+            <!--Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a>-->
+          </blockquote>
+        </div>
+        <ul>
+          {{#each tags}}
+            <li>{{>tag}}</li>
+          {{/each}}
+        </ul>
       </div>
     {{/each}}
   </div>
 </body>
+</template>
+
+<template name="tag">
+  <li>{{text}}</li>
 </template>

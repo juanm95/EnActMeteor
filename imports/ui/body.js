@@ -23,6 +23,9 @@ Template.Page_Template.helpers({
   },
   posts() {
     return Issues.find({}, {sort : {last_interaction_time: -1} })
+  },
+  tags() {
+    return Issues.find({score: {} })
   }
 });
 
