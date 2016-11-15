@@ -29,6 +29,10 @@ Template.Page_Template.helpers({
   posts() {
     return Issues.find({}, {sort : {last_interaction_time: -1} })
   },
+<<<<<<< HEAD
+  tags() {
+    return Issues.find({score: {} })
+=======
   tasks() {
     const instance = Template.instance();
     if (instance.state.get('show-open')) {
@@ -40,6 +44,7 @@ Template.Page_Template.helpers({
   },
   incompleteCount() {
     return Issues.find({ tags: { $in: ["open"] } }).count();
+>>>>>>> ad86e61485895a9d925b5dfd247ac10f6be472e8
   }
 });
 
