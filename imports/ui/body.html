@@ -25,16 +25,21 @@
           }
           console.log(databaseEmpty)
           for(i=0; i < response.data.length; i++) {
-            Issues.update({
-              _id: response.data[i].id
-            }, {$set: {
-              url: response.data[i].permalink_url,
-              created_time : response.data[i].created_time,
-              shares: response.data[i].shares,
-              last_interaction_time : response.data[i].created_time
-            }}, {
-              upsert: true
-            });
+            Issues.update(
+              {_id: response.data[i].id}, 
+              {
+                $set: {
+                  url: response.data[i].permalink_url,
+                  created_time : response.data[i].created_time,
+                  shares: response.data[i].shares,
+                  last_interaction_time : response.data[i].created_time
+                },
+                $setOnInsert:{
+                  tags:["open"]
+                }
+              }, 
+              {upsert: true}
+            );
           }
           getTimeOfMostRecentComment();
         }
