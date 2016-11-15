@@ -30,11 +30,13 @@
             }, {$set: {
               url: response.data[i].permalink_url,
               created_time : response.data[i].created_time,
-              shares: response.data[i].shares
+              shares: response.data[i].shares,
+              last_interaction_time : response.data[i].created_time
             }}, {
               upsert: true
             });
           }
+          getTimeOfMostRecentComment();
         }
       );
       testAPI();
@@ -48,6 +50,41 @@
       document.getElementById('status').innerHTML = 'Please log ' +
       'into Facebook.';
     }
+  }
+
+  function getTimeOfMostRecentComment(){
+    console.log("getTimeOfMostRecentComment executing")
+    Issues.find({}).forEach(
+      function(post){
+        console.log(post)
+        var id = post._id
+        FB.api(
+          '/' + id + '/comments',
+          {
+            "summary": true,
+            "order": "reverse_chronological"
+          },
+          function (response) {
+            console.log("comments received")
+            console.log(response)
+            if (response && !response.error) {
+              if(response.data.length != 0) {
+                var comment = response.data[0]
+                console.log(comment)
+                console.log("Most recent time is")
+                console.log(comment.created_time)
+                Issues.update(
+                  {_id : id},
+                  {$set: {
+                    last_interaction_time : comment.created_time
+                  }}
+                )
+              }
+            }
+          }
+        );
+      }
+    )
   }
 
   // This function is called when someone finishes with the Login
@@ -84,6 +121,7 @@
     //
     // These three cases are handled in the callback functio
     FB.getLoginStatus(function(response) {
+      //make sure these are executed asynchronously
       statusChangeCallback(response);
     });
   };
