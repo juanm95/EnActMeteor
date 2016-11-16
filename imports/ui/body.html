@@ -172,16 +172,17 @@
 <div class="container">
   <header>
     <h1>EnAct</h1>
+    <h1>Open Issues: {{openIssuesCount}}</h1>
 <!--       <button class="headerButton">Worked On</button>
       <button class="headerButton">Favorites</button>
       <button class="headerButton">Settings</button> -->
 
-      <label class="show-open">
-        <input type="checkbox" />
-        Open
-      </label>
+    <label class="show-open">
+      <input type="checkbox" />
+      Show open issues
+    </label>
 
-      <label class="show-closed">
+      <!--<label class="show-closed">
         <input type="checkbox" />
         Closed
       </label>
@@ -198,12 +199,8 @@
         <input type="text" name="Details" placeholder="Details"/>
         <input type="submit"/>
       </form>
-      {{/if}}
-    </header>
-
-    <h1>Open ({{incompleteCount}})</h1>
-
-    
+      {{/if}}-->
+  </header>    
     <!-- {{> Template.dynamic template=main }} -->
     {{#each posts}}
       <div>

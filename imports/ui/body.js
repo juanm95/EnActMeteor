@@ -10,7 +10,6 @@ import './ShowIssue.js'
 
 Template.Page_Template.onCreated(function bodyOnCreated() {
   this.state = new ReactiveDict();
-
 });
 
 Template.Page_Template.helpers({
@@ -27,19 +26,16 @@ Template.Page_Template.helpers({
     return doc.admin === "true";
   },
   posts() {
-    return Issues.find({}, {sort : {last_interaction_time: -1} })
-  },
-  tasks() {
     const instance = Template.instance();
-    if (instance.state.get('show-open')) {
+    if (instance.state.get('showOpen')) {
       // If hide completed is checked, filter tasks
-      return Issues.find({ tags: { $in: ["open"] } }, { sort: { last_interaction_time: -1 } }); //right syntax??
+      return Issues.find({ tags: "open" },{ sort: { last_interaction_time: -1 } });
     }
     // Otherwise, return all of the tasks
     return Issues.find({}, { sort: { last_interaction_time: -1 } });
   },
-  incompleteCount() {
-    return Issues.find({ tags: { $in: ["open"] } }).count();
+  openIssuesCount() {
+    return Issues.find({ tags: "open" }).count();
   }
 });
 
@@ -62,8 +58,8 @@ Template.Page_Template.events({
     });
     detailsObject.val("");
     subjectObject.val("");
+  },
+  'change .show-open input'(event, instance) {
+   instance.state.set('showOpen', event.target.checked);
   }
-  //'change .show-open input'(event, instance) {
-  //  instance.state.set('show-open', event.target.checked);
-  //},
 });
