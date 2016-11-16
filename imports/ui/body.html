@@ -25,14 +25,25 @@
           }
           console.log(databaseEmpty)
           for(i=0; i < response.data.length; i++) {
+            //console.log("updated_time is ")
+            //console.log(response.data[i].updated_time)
+            //why is updated_time undefined when I print it?
+            console.log("caption is")
+            console.log(response.data[i].caption)
+            console.log("description is")
+            console.log(response.data[i].description)
             Issues.update(
               {_id: response.data[i].id}, 
               {
                 $set: {
+                  caption : response.data[i].caption,
+                  description : response.data[i].description,
                   url: response.data[i].permalink_url,
                   created_time : response.data[i].created_time,
                   shares: response.data[i].shares,
                   last_interaction_time : response.data[i].created_time
+                  //I don't know why when I use response.data[i].updated_time
+                  //it's not showing up in the database.
                 },
                 $setOnInsert:{
                   tags:["open"]

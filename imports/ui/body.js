@@ -60,6 +60,7 @@ Template.Page_Template.events({
     subjectObject.val("");
   },
   'change .show-open input'(event, instance) {
-   instance.state.set('showOpen', event.target.checked);
+    console.log(event.target.checked)
+    instance.state.set('showOpen', event.target.checked);
   }
 });
