@@ -212,15 +212,11 @@
         </div>
         <ul>
           {{#each tags}}
-            <li>{{>tag}}</li>
+            <li>{{this}}</li>
           {{/each}}
         </ul>
       </div>
     {{/each}}
   </div>
 </body>
-</template>
-
-<template name="tag">
-  <li>{{text}}</li>
 </template>
