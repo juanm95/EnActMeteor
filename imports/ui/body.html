@@ -213,8 +213,9 @@
       {{/if}}-->
   </header>    
     <!-- {{> Template.dynamic template=main }} -->
+    <div class="all-posts-container">
     {{#each posts}}
-      <div>
+      <div class="fb-post-container">
         <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true">
 
           <blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">
@@ -229,5 +230,6 @@
       </div>
     {{/each}}
   </div>
+</div>
 </body>
 </template>

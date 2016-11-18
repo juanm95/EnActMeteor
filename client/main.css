@@ -29,6 +29,16 @@ body {
   border: 5px solid #79431F;
 }
 
+.all-posts-container {
+  /*column-count: 2;*/
+}
+
+.fb-post-container{
+  max-width: 500px;
+  padding: 10px 250px 10px 250px;
+  /*border: 5px solid #79431F;*/
+}
+
 header {
   color: #79431F;
   border-bottom: 2px solid #79431F;
