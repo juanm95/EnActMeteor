@@ -1,37 +1,20 @@
 <template name="Page_Template">
   <body>
-  <p id="issues"></p>
   <script>
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
-    if (response.status === 'connected') {
-      // Logged into your app and Facebook.
+    if (response.status === 'connected') { // When connected, we automatically ask for the most recent posts
       FB.api('/CGNetSwara/feed?fields=permalink_url, created_time, shares','GET', {},
         function(response) {
-          console.log(response);
-          document.getElementById("issues").innerHTML = response;
-          //issues.createIndex( { "facebookID": 1 }, { unique: true } )
-          databaseEmpty = false
           count = Issues.find({}).count()
-          console.log(count)
           if(count == 0){
             databaseEmpty = true
           }
-          console.log(databaseEmpty)
           for(i=0; i < response.data.length; i++) {
-            //console.log("updated_time is ")
-            //console.log(response.data[i].updated_time)
-            //why is updated_time undefined when I print it?
-            console.log("caption is")
-            console.log(response.data[i].caption)
-            console.log("description is")
-            console.log(response.data[i].description)
             Issues.update(
               {_id: response.data[i].id}, 
               {
@@ -41,9 +24,7 @@
                   url: response.data[i].permalink_url,
                   created_time : response.data[i].created_time,
                   shares: response.data[i].shares,
-                  last_interaction_time : response.data[i].created_time
-                  //I don't know why when I use response.data[i].updated_time
-                  //it's not showing up in the database.
+                  last_interaction_time : response.data[i].created_time,
                 },
                 $setOnInsert:{
                   tags:["open"]
@@ -55,7 +36,6 @@
           getTimeOfMostRecentComment();
         }
       );
-      testAPI();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -69,10 +49,8 @@
   }
 
   function getTimeOfMostRecentComment(){
-    console.log("getTimeOfMostRecentComment executing")
     Issues.find({}).forEach(
       function(post){
-        console.log(post)
         var id = post._id
         FB.api(
           '/' + id + '/comments',
@@ -81,14 +59,9 @@
             "order": "reverse_chronological"
           },
           function (response) {
-            console.log("comments received")
-            console.log(response)
             if (response && !response.error) {
               if(response.data.length != 0) {
                 var comment = response.data[0]
-                console.log(comment)
-                console.log("Most recent time is")
-                console.log(comment.created_time)
                 Issues.update(
                   {_id : id},
                   {$set: {
@@ -149,86 +122,69 @@
     js = d.createElement(s); js.id = id;
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
-    console.log("loaded sdk");
+    console.log("loaded sdk at " + new Date());
   }(document, 'script', 'facebook-jssdk'));
 
-
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
-  function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-      'Thanks for logging in, ' + response.name + '!';
+  // This keeps track of changes within fb-post-containers and saves the new contents to our database.
+  // This uses mutation observers which you can learn more about here: https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+  var innerHTMLs = {}
+  function saveInnerHTMLs() {
+    Object.keys(innerHTMLs).forEach(function(key) {
+      Issues.update(
+        {_id: key}, 
+        {
+          $set: {
+            innerHTML: innerHTMLs[key]
+          }
+        }, 
+        {upsert: true}
+      );   
     });
   }
+  var lastChangeTimeoutID = "";
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if(mutation.target.id !== "fb-posts" && mutation.target.localName === "div") { // Ignores alerts at the iframe and the all-post level.
+        var postId = mutation.target.id;
+        innerHTMLs[mutation.target.id] = mutation.target.innerHTML;
+        window.clearTimeout(lastChangeTimeoutID);
+        lastChangeTimeoutID = window.setTimeout(saveInnerHTMLs, 20000);
+      }
+    });
+  });
+
+  var config = { attributes: true, childList: true, characterData: true, subtree: true };
+  observer.observe(document.getElementById("fb-posts"), config);
+
   </script>
-  {{addissues}}
-<!--
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
--->
-
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-
-<div id="status">
-</div>
-
-<!--
-  Below is the original code w/o FB integration
--->
 <div class="container">
   <header>
     <h1>EnAct</h1>
     <h1>Open Issues: {{openIssuesCount}}</h1>
-<!--       <button class="headerButton">Worked On</button>
-      <button class="headerButton">Favorites</button>
-      <button class="headerButton">Settings</button> -->
-
     <label class="show-open">
       <input type="checkbox" />
       Show open issues
     </label>
+    <br/>
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
 
-      <!--<label class="show-closed">
-        <input type="checkbox" />
-        Closed
-      </label>
-
-      {{> loginButtons}}
-
-      {{#if currentUserIsAdmin}}
-      I am admin.
-      {{/if}}
-
-      {{#if currentUser}}
-      <form class="new-issue">
-        <input type="text" name="Subject" placeholder="Subject" />
-        <input type="text" name="Details" placeholder="Details"/>
-        <input type="submit"/>
-      </form>
-      {{/if}}-->
+    <div id="status">
+    </div>
   </header>    
-    <!-- {{> Template.dynamic template=main }} -->
-    <div class="all-posts-container">
-    {{#each posts}}
-      <div class="fb-post-container">
-        <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true">
-
-          <blockquote cite="{{url}}" class="fb-xfbml-parse-ignore">
-            <!--Posted by <a href="https://www.facebook.com/facebook/">Facebook</a> on&nbsp;<a href="{{url}}">Go to comment</a>-->
-          </blockquote>
-        </div>
-        <ul>
-          {{#each tags}}
-            <li>{{this}}</li>
-          {{/each}}
-        </ul>
-      </div>
-    {{/each}}
+    <div class="all-posts-container" id="fb-posts">
+      {{#each posts}}
+        {{{innerHTML}}}
+        <!-- <div class="fb-post-container">
+          <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+          </div>
+          <ul>
+            {{#each tags}}
+              <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div> -->
+      {{/each}}
   </div>
 </div>
 </body>
