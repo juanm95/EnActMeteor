@@ -125,10 +125,10 @@
     console.log("loaded sdk at " + new Date());
   }(document, 'script', 'facebook-jssdk'));
 
-  // This keeps track of changes within fb-post-containers and saves the new contents to our database.
-  // This uses mutation observers which you can learn more about here: https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-  var innerHTMLs = {}
-  function saveInnerHTMLs() {
+  //------------- SAVING HTML OF POSTS --------------------//
+
+  var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
+  function saveInnerHTMLs() { // Goes through our innerHTMLs and updates them in the database
     Object.keys(innerHTMLs).forEach(function(key) {
       Issues.update(
         {_id: key}, 
@@ -142,12 +142,14 @@
     });
   }
   var lastChangeTimeoutID = "";
+  // This keeps track of changes within fb-post-containers and saves the new contents to our database.
+  // This uses mutation observers which you can learn more about here: https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
   var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       if(mutation.target.id !== "fb-posts" && mutation.target.localName === "div") { // Ignores alerts at the iframe and the all-post level.
         var postId = mutation.target.id;
-        innerHTMLs[mutation.target.id] = mutation.target.innerHTML;
-        window.clearTimeout(lastChangeTimeoutID);
+        innerHTMLs[postId] = mutation.target.innerHTML;
+        window.clearTimeout(lastChangeTimeoutID); // each time something gets changed in our html, we reset this timer. It takes 20 seconds to assume its safe to save.
         lastChangeTimeoutID = window.setTimeout(saveInnerHTMLs, 20000);
       }
     });
@@ -155,6 +157,7 @@
 
   var config = { attributes: true, childList: true, characterData: true, subtree: true };
   observer.observe(document.getElementById("fb-posts"), config);
+//------------- SAVING HTML OF POSTS END --------------------//
 
   </script>
 <div class="container">
@@ -172,6 +175,7 @@
     <div id="status">
     </div>
   </header>    
+  <!-- In order to test the saving of innerHTML and then displaying that, first uncomment the old code to gather the innerHTML, then once the innerHTML has been added to the database (check it in meteor mongo), come back here, and comment it out. -->
     <div class="all-posts-container" id="fb-posts">
       {{#each posts}}
         {{{innerHTML}}}
