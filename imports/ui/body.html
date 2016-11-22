@@ -8,8 +8,9 @@
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') { // When connected, we automatically ask for the most recent posts
-      FB.api('/CGNetSwara/feed?fields=permalink_url, created_time, shares','GET', {},
+      FB.api('/CGNetSwara/feed?fields=permalink_url, created_time, updated_time, shares','GET', {},
         function(response) {
+          console.log(response)
           count = Issues.find({}).count()
           if(count == 0){
             databaseEmpty = true
@@ -24,7 +25,8 @@
                   url: response.data[i].permalink_url,
                   created_time : response.data[i].created_time,
                   shares: response.data[i].shares,
-                  last_interaction_time : response.data[i].created_time,
+                  last_interaction_time : response.data[i].updated_time,
+                  comments: []
                 },
                 $setOnInsert:{
                   tags:["open"]
@@ -33,7 +35,8 @@
               {upsert: true}
             );
           }
-          getTimeOfMostRecentComment();
+          getComments();
+          //getTimeOfMostRecentComment();
         }
       );
     } else if (response.status === 'not_authorized') {
@@ -48,7 +51,38 @@
     }
   }
 
-  function getTimeOfMostRecentComment(){
+  function getComments() {
+    Issues.find({}).forEach (
+      function(post) {
+        var id = post._id
+        FB.api(
+          '/' + id + '/comments',
+          {
+            "summary": true,
+            "order": "reverse_chronological"
+          },
+          function (response) {
+            if (response && !response.error) {
+              for(i=0; i < response.data.length; i++) {
+                var comment = response.data[i]
+                console.log(comment.from.name)
+                Issues.update(
+                  {_id : id},
+                  {$push: 
+                    {comments:
+                      {comment/*comment.from.name*/: comment.message,
+                  }}}
+                )
+              }
+            }
+          }
+        );
+      }
+    )
+  }
+
+  // Last interaction time can simply be determined using "updated_time" field rather than the following method
+  /*function getTimeOfMostRecentComment(){
     Issues.find({}).forEach(
       function(post){
         var id = post._id
@@ -74,7 +108,7 @@
         );
       }
     )
-  }
+  }*/
 
   // This function is called when someone finishes with the Login
   // Button.  See the onlogin handler attached to it in the sample
@@ -181,6 +215,11 @@
         {{{innerHTML}}}
         <!-- <div class="fb-post-container">
           <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+          </div>
+          <div class="comments">
+            {{#each comments}}
+              <li>{{comment}}</li>
+            {{/each}}
           </div>
           <ul>
             {{#each tags}}
