@@ -123,16 +123,18 @@
       var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
       function saveInnerHTMLs() { // Goes through our innerHTMLs and updates them in the database
         Object.keys(innerHTMLs).forEach(function (key) {
-          Issues.update({
-            _id: key
-          }, {
-            $set: { 
-              innerHTML: innerHTMLs[key],
-              isCached: true
-            }
-          }, {
-            upsert: true
-          });
+          if (innerHTMLs[key] !== "") {
+            Issues.update({
+              _id: key
+            }, {
+              $set: {
+                innerHTML: innerHTMLs[key],
+                isCached: true
+              }
+            }, {
+              upsert: true
+            });
+          }
         });
         $("#status").html("New content has been saved!");
       }
@@ -184,14 +186,10 @@
       <div class="all-posts-container" id="fb-posts">
         {{#each posts}}
         <div class="fb-post-container">
-          {{#if isCached}} 
-            {{{innerHTML}}}
-            (This content has been cached)
-          {{else}}
-            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
-            </div>
-            (This content has not been cached)
-          {{/if}}
+          {{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
+          <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+          </div>
+          (This content has not been cached) {{/if}}
           <div class="comments">
             {{#each comments}}
             <li>{{this}}</li>
