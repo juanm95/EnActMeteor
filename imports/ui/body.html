@@ -1,188 +1,176 @@
 <template name="Page_Template">
+
   <body>
     <script>
-    var unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
-    // This is called with the results from from FB.getLoginStatus().
-    function statusChangeCallback(response) {
-      // The response object is returned with a status field that lets the
-      // app know the current login status of the person.
-      // Full docs on the response object can be found in the documentation
-      // for FB.getLoginStatus().
-      if (response.status === 'connected') { // When connected, we automatically ask for the most recent posts
-        postsToDatabase()
-      } else if (response.status === 'not_authorized') {
-        // The person is logged into Facebook, but not your app.
-        document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
-      } else {
-        // The person is not logged into Facebook, so we're not sure if
-        // they are logged into this app or not.
-        document.getElementById('status').innerHTML = 'Please log ' +
-        'into Facebook.';
+      var unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
+        // This is called with the results from from FB.getLoginStatus().
+      function statusChangeCallback(response) {
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') { // When connected, we automatically ask for the most recent posts
+          postsToDatabase()
+        } else if (response.status === 'not_authorized') {
+          // The person is logged into Facebook, but not your app.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into this app.';
+        } else {
+          // The person is not logged into Facebook, so we're not sure if
+          // they are logged into this app or not.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into Facebook.';
+        }
       }
-    }
 
-    function postsToDatabase(){
-      console.log("postsToDatabase was called")
-
-      FB.api('/108247265894675/feed?fields=message, object_id, permalink_url, created_time, shares, updated_time',
-       'GET', {access_token : unlimitedPageAccessToken},
-        function(response) {
-          if (response && !response.error){
-            console.log("The posts are: ")
-            console.log(response)
-            for(i=0; i < response.data.length; i++) {
-              Issues.update(
-                {_id: response.data[i].id}, 
-                {
+      function postsToDatabase() {
+        FB.api('/108247265894675/feed?fields=message, object_id, permalink_url, created_time, shares, updated_time',
+          'GET', {
+            access_token: unlimitedPageAccessToken
+          },
+          function (response) {
+            if (response && !response.error) {
+              for (i = 0; i < response.data.length; i++) {
+                Issues.update({
+                  _id: response.data[i].id
+                }, {
                   $set: {
-                    message : response.data[i].message,
-                    object_id : response.data[i].object_id,
-                    url : response.data[i].permalink_url,
-                    created_time : response.data[i].created_time,
-                    shares : response.data[i].shares,
-                    last_interaction_time : response.data[i].updated_time,
-                    comments : []
+                    message: response.data[i].message,
+                    object_id: response.data[i].object_id,
+                    url: response.data[i].permalink_url,
+                    created_time: response.data[i].created_time,
+                    shares: response.data[i].shares,
+                    last_interaction_time: response.data[i].updated_time,
+                    comments: []
                   },
-                  $setOnInsert:{
-                    tags:["open"]
+                  $setOnInsert: {
+                    tags: ["open"],
+                    isCached: false
                   }
-                }, 
-                {upsert: true}
-              );
-            }
-            getCommentsOfEachPost();
-          }
-        }
-      );
-    }
-
-    //?fields=permalink_url, created_time, updated_time, message, object_id'
-
-    function getCommentsOfEachPost() {
-      console.log("getCommentsOfEachPost was called")
-      Issues.find({}).forEach(
-        function(post) {
-          var id = post._id
-          console.log("The id of this post is")
-          console.log(id)
-          FB.api(
-            '/' + id + '/comments', 'GET', 
-            {access_token : unlimitedPageAccessToken, summary: 'true', 
-            order: 'reverse_chronological'},
-            function (response) {
-              if (response && !response.error) {
-                for(i=0; i < response.data.length; i++) {
-                  var message = response.data[i].message
-                  Issues.update(
-                    {_id : id},
-                    {$addToSet:  {comments: message } }
-                  )
-                }
+                }, {
+                  upsert: true
+                });
               }
-            }
-          );
-        }
-      )
-    }
-
-    // This function is called when someone finishes with the Login
-    // Button.  See the onlogin handler attached to it in the sample
-    // code below.
-    function checkLoginState() {
-      FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-      });
-    }
-
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '1293600994030280',
-        cookie     : true,  // enable cookies to allow the server to access 
-                            // the session
-        xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.5' // use graph api version 2.5
-      })
-      postsToDatabase()
-      getCommentsOfEachPost()
-      
-      // FB.ui({
-      //   method: 'share',
-      //   href: 'https://developers.facebook.com/docs/'
-      // }, function(response){}
-      // Now that we've initialized the JavaScript SDK, we call 
-      // FB.getLoginStatus().  This function gets the state of the
-      // person visiting this page and can return one of three states to
-      // the callback you provide.  They can be:
-      //
-      // 1. Logged into your app ('connected')
-      // 2. Logged into Facebook, but not your app ('not_authorized')
-      // 3. Not logged into Facebook and can't tell if they are logged into
-      //    your app or not.
-      //
-      // These three cases are handled in the callback functio
-      //FB.getLoginStatus(function(response) {
-        //make sure these are executed asynchronously
-        //statusChangeCallback(response);
-      //});
-    };
-
-    // Load the SDK asynchronously
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-      console.log("loaded sdk at " + new Date());
-    }(document, 'script', 'facebook-jssdk'));
-
-    //------------- SAVING HTML OF POSTS --------------------//
-
-    var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
-    function saveInnerHTMLs() { // Goes through our innerHTMLs and updates them in the database
-      Object.keys(innerHTMLs).forEach(function(key) {
-        Issues.update(
-          {_id: key}, 
-          {
-            $set: {
-              innerHTML: innerHTMLs[key]
-            }
-          }, 
-          {upsert: true}
-        );   
-      });
-    }
-    var lastChangeTimeoutID = "";
-    // This keeps track of changes within fb-post-containers and saves the new contents to our database.
-    // This uses mutation observers which you can learn more about here: https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-    var observer = new MutationObserver(
-      function(mutations) {
-        mutations.forEach(
-          function(mutation) {
-            if(mutation.target.id !== "fb-posts" && mutation.target.localName === "div") { // Ignores alerts at the iframe and the all-post level.
-              var postId = mutation.target.id;
-              innerHTMLs[postId] = mutation.target.innerHTML;
-              window.clearTimeout(lastChangeTimeoutID); // each time something gets changed in our html, we reset this timer. It takes 20 seconds to assume its safe to save.
-              lastChangeTimeoutID = window.setTimeout(saveInnerHTMLs, 20000);
+              getCommentsOfEachPost();
             }
           }
         );
       }
-    );
 
-    var config = { attributes: true, childList: true, characterData: true, subtree: true };
-    observer.observe(document.getElementById("fb-posts"), config);
-  //------------- SAVING HTML OF POSTS END --------------------//
+      function getCommentsOfEachPost() {
+        Issues.find({}).forEach(
+          function (post) {
+            var id = post._id
+            FB.api(
+              '/' + id + '/comments', 'GET', {
+                access_token: unlimitedPageAccessToken,
+                summary: 'true',
+                order: 'reverse_chronological'
+              },
+              function (response) {
+                if (response && !response.error) {
+                  for (i = 0; i < response.data.length; i++) {
+                    var message = response.data[i].message
+                    Issues.update({
+                      _id: id
+                    }, {
+                      $addToSet: {
+                        comments: message
+                      }
+                    })
+                  }
+                }
+              }
+            );
+          }
+        )
+      }
 
+      // This function is called when someone finishes with the Login
+      // Button.  See the onlogin handler attached to it in the sample
+      // code below.
+      function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '1293600994030280',
+          cookie: true, // enable cookies to allow the server to access 
+          // the session
+          xfbml: true, // parse social plugins on this page
+          version: 'v2.5' // use graph api version 2.5
+        })
+        postsToDatabase()
+        getCommentsOfEachPost()
+      };
+
+      // Load the SDK asynchronously
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        console.log("loaded sdk at " + new Date());
+      }(document, 'script', 'facebook-jssdk'));
+
+      //------------- SAVING HTML OF POSTS --------------------//
+
+      var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
+      function saveInnerHTMLs() { // Goes through our innerHTMLs and updates them in the database
+        Object.keys(innerHTMLs).forEach(function (key) {
+          Issues.update({
+            _id: key
+          }, {
+            $set: { 
+              innerHTML: innerHTMLs[key],
+              isCached: true
+            }
+          }, {
+            upsert: true
+          });
+        });
+        $("#status").html("New content has been saved!");
+      }
+      var lastChangeTimeoutID = "";
+      // This keeps track of changes within fb-post-containers and saves the new contents to our database.
+      // This uses mutation observers which you can learn more about here: https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+      var observer = new MutationObserver(
+        function (mutations) {
+          mutations.forEach(
+            function (mutation) {
+              if (mutation.target.id !== "fb-posts" && mutation.target.localName === "div" && mutation.target.classList.length > 1 && mutation.target.classList[1] === "new-post") { // Ignores alerts at the iframe and the all-post level.
+                console.log(mutation);
+                $("#status").html("Detected new content. Saving new content...");
+                var postId = mutation.target.id;
+                innerHTMLs[postId] = mutation.target.innerHTML;
+                window.clearTimeout(lastChangeTimeoutID); // each time something gets changed in our html, we reset this timer. It takes 20 seconds to assume its safe to save.
+                lastChangeTimeoutID = window.setTimeout(saveInnerHTMLs, 20000);
+              }
+            }
+          );
+        }
+      );
+
+      var config = {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true
+      };
+      observer.observe(document.getElementById("fb-posts"), config);
+      //------------- SAVING HTML OF POSTS END --------------------//
     </script>
     <div class="container">
       <header>
         <h1>EnAct</h1>
         <h1>Open Issues: {{openIssuesCount}}</h1>
         <label class="show-open">
-          <input type="checkbox" />
-          Show open issues
+          <input type="checkbox" /> Show open issues
         </label>
         <br/>
 
@@ -191,25 +179,30 @@
 
         <div id="status">
         </div>
-      </header>    
+      </header>
       <!-- In order to test the saving of innerHTML and then displaying that, first uncomment the old code to gather the innerHTML, then once the innerHTML has been added to the database (check it in meteor mongo), come back here, and comment it out. -->
       <div class="all-posts-container" id="fb-posts">
         {{#each posts}}
-          <!--{{{innerHTML}}}-->
-            <!-- <div class="fb-post-container">
-              <div class="fb-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
-              </div>
-              <div class="comments">
-                {{#each comments}}
-                  <li>{{comment}}</li>
-                {{/each}}
-              </div>
-              <ul>
-                {{#each tags}}
-                  <li>{{this}}</li>
-                {{/each}}
-              </ul>
-            </div> -->
+        <div class="fb-post-container">
+          {{#if isCached}} 
+            {{{innerHTML}}}
+            (This content has been cached)
+          {{else}}
+            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+            </div>
+            (This content has not been cached)
+          {{/if}}
+          <div class="comments">
+            {{#each comments}}
+            <li>{{this}}</li>
+            {{/each}}
+          </div>
+          <ul>
+            {{#each tags}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
         {{/each}}
       </div>
     </div>
