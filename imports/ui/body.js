@@ -13,16 +13,11 @@ Template.Page_Template.onCreated(function bodyOnCreated() {
 });
 
 Template.Page_Template.helpers({
-  addissues() {
-    console.log("add")
-    //console.log(issues)
-  },
   currentUserIsAdmin() {
     doc = Meteor.users.findOne()
     if (doc === undefined) {
       return false;
     }
-    console.log(doc)
     return doc.admin === "true";
   },
   posts() {
