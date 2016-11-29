@@ -13,9 +13,7 @@ Template.Page_Template.onCreated(function bodyOnCreated() {
 });
 
 Template.Page_Template.helpers({
-<<<<<<< HEAD
-=======
-  tags: [
+  alltags: [
     'open', 'closed', 
     'coal mining', 'ration', 'food', 'forest', 'land',
     'teacher', 'school',
@@ -28,13 +26,12 @@ Template.Page_Template.helpers({
     console.log("add")
     //console.log(issues)
   },
->>>>>>> 54a3c733a6c54e2b909b1e7dd316a51135bfdb45
   currentUserIsAdmin() {
-    doc = Meteor.users.findOne()
-    if (doc === undefined) {
-      return false;
+    var user = Meteor.user
+    if(user != null){
+      return user.username === "admin"
     }
-    return doc.admin === "true";
+    return false
   },
   posts() {
     const instance = Template.instance();
@@ -65,7 +62,7 @@ Template.Page_Template.helpers({
     if (checkedTags.length == 0) {
       return Issues.find({}, { sort: { last_interaction_time: -1 } });  
     } else {
-      return Issues.find({tags: checkedTags}, { sort: { last_interaction_time: -1 } });
+      return Issues.find({tags: {$all: checkedTags} }, { sort: { last_interaction_time: -1 } });
     }
   },
   openIssuesCount() {

@@ -3,25 +3,6 @@
   <body>
     <script>
     var unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
-    // This is called with the results from from FB.getLoginStatus().
-    // function statusChangeCallback(response) {
-    //   // The response object is returned with a status field that lets the
-    //   // app know the current login status of the person.
-    //   // Full docs on the response object can be found in the documentation
-    //   // for FB.getLoginStatus().
-    //   if (response.status === 'connected') { // When connected, we automatically ask for the most recent posts
-    //     postsToDatabase()
-    //   } else if (response.status === 'not_authorized') {
-    //     // The person is logged into Facebook, but not your app.
-    //     document.getElementById('status').innerHTML = 'Please log ' +
-    //     'into this app.';
-    //   } else {
-    //     // The person is not logged into Facebook, so we're not sure if
-    //     // they are logged into this app or not.
-    //     document.getElementById('status').innerHTML = 'Please log ' +
-    //     'into Facebook.';
-    //   }
-    // }
 
       function postsToDatabase() {
         FB.api('/108247265894675/feed?fields=message, object_id, permalink_url, created_time, shares, updated_time',
@@ -175,17 +156,16 @@
           <input type="checkbox" /> Show open issues
         </label>-->
         <br/>
+
+        {{> loginButtons}}
         
         <div class="tag-list">
-          {{#each tags}}
+          {{#each alltags}}
             <label class="checkBoxClass">
               <input type="checkbox" name={{this}}> {{this}}
             </label>
           {{/each}}
        </div>
-
-        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-        </fb:login-button>
 
         <div id="status">
         </div>
