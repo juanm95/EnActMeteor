@@ -13,8 +13,6 @@ Template.Page_Template.onCreated(function bodyOnCreated() {
 });
 
 Template.Page_Template.helpers({
-<<<<<<< HEAD
-=======
   tags: [
     'open', 'closed', 
     'coal mining', 'ration', 'food', 'forest', 'land',
@@ -28,12 +26,12 @@ Template.Page_Template.helpers({
     console.log("add")
     //console.log(issues)
   },
->>>>>>> 54a3c733a6c54e2b909b1e7dd316a51135bfdb45
   currentUserIsAdmin() {
     doc = Meteor.users.findOne()
     if (doc === undefined) {
       return false;
     }
+    console.log(doc)
     return doc.admin === "true";
   },
   posts() {
