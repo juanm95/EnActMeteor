@@ -171,10 +171,18 @@
       <header>
         <h1>EnAct</h1>
         <h1>Open Issues: {{openIssuesCount}}</h1>
-        <label class="show-open">
+        <!--<label class="show-open">
           <input type="checkbox" /> Show open issues
-        </label>
+        </label>-->
         <br/>
+        
+        <div class="tag-list">
+          {{#each tags}}
+            <label class="checkBoxClass">
+              <input type="checkbox" name={{this}}> {{this}}
+            </label>
+          {{/each}}
+       </div>
 
         <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
         </fb:login-button>

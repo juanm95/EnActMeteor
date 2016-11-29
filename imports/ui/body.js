@@ -13,6 +13,15 @@ Template.Page_Template.onCreated(function bodyOnCreated() {
 });
 
 Template.Page_Template.helpers({
+  tags: [
+    'open', 'closed', 
+    'coal mining', 'ration', 'food', 'forest', 'land',
+    'teacher', 'school',
+    'handpump', 'water', 'nrega', 'electricity',
+    'Hindi', 'Gondi', 
+    'Madhya Pradesh', 'Chatisghar',
+    'featured'
+  ],
   addissues() {
     console.log("add")
     //console.log(issues)
@@ -27,12 +36,35 @@ Template.Page_Template.helpers({
   },
   posts() {
     const instance = Template.instance();
-    if (instance.state.get('showOpen')) {
-      // If hide completed is checked, filter tasks
-      return Issues.find({ tags: "open" },{ sort: { last_interaction_time: -1 } });
+
+    //Mark tags which are checked
+    var checkedTags = []
+    if (instance.state.get('showOpen')) {checkedTags.push("open")}
+    if (instance.state.get('showClosed')) {checkedTags.push("closed")}
+    if (instance.state.get('showCoalMining')) {checkedTags.push("coalmining")}
+    if (instance.state.get('showRation')) {checkedTags.tags += "ration"}
+    if (instance.state.get('showFood')) {checkedTags.tags += "food"}
+    if (instance.state.get('showForest')) {checkedTags.tags += "forest"}
+    if (instance.state.get('showLand')) {checkedTags.tags += "land"}
+    if (instance.state.get('showTeacher')) {checkedTags.tags += "teacher"}
+    if (instance.state.get('showSchool')) {checkedTags.tags += "school"}
+    if (instance.state.get('showHandpump')) {checkedTags.tags += "handpump"}
+    if (instance.state.get('showWater')) {checkedTags.tags += "water"}
+    if (instance.state.get('showNrega')) {checkedTags.tags += "nrega"}
+    if (instance.state.get('showElectricity')) {checkedTags.tags += "electricity"}
+    if (instance.state.get('showHindi')) {checkedTags.tags += "hindi"}
+    if (instance.state.get('showGondi')) {checkedTags.tags += "gondi"}
+    if (instance.state.get('showMadhyaPradesh')) {checkedTags.tags += "madhyapradesh"}
+    if (instance.state.get('showChatisghar')) {checkedTags.tags += "chatisghar"}
+    if (instance.state.get('showFeatured')) {checkedTags.tags += "featured"}
+    
+    console.log(checkedTags)
+    //Display issues which have all checked tags
+    if (checkedTags.length == 0) {
+      return Issues.find({}, { sort: { last_interaction_time: -1 } });  
+    } else {
+      return Issues.find({tags: checkedTags}, { sort: { last_interaction_time: -1 } });
     }
-    // Otherwise, return all of the tasks
-    return Issues.find({}, { sort: { last_interaction_time: -1 } });
   },
   openIssuesCount() {
     return Issues.find({ tags: "open" }).count();
@@ -40,7 +72,19 @@ Template.Page_Template.helpers({
 });
 
 Template.Page_Template.events({
-  'change .show-open input'(event, instance) {
-    instance.state.set('showOpen', event.target.checked)
+  //Handle event of tag boxes being checked
+  'change .checkBoxClass input'(event, instance) {
+    var tag = event.target.name
+
+    //Capitalize each word and take out spaces
+    var formattedTag = tag.replace(/\w+/g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1);
+    }).replace(/\s/g, '');
+
+    var showTaggedIssues = "show" + formattedTag
+    console.log(showTaggedIssues)
+
+    //Instance state for showing each tag corresponds to value of checkbox
+    instance.state.set(showTaggedIssues, event.target.checked)
   }
 });
