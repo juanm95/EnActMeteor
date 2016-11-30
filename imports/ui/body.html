@@ -67,8 +67,8 @@
         )
       }
 
-      function showTagList() {
-        document.getElementById("tagOptionsDropdown").classList.toggle("show");
+      function showTagList(id) {
+        document.getElementById("tagOptionsDropdown" + id).classList.toggle("show");
       }
 
       // Close the dropdown menu if the user clicks outside of it
@@ -209,8 +209,8 @@
               {{#each tags}}
                 <button type="button" disabled class="issue-tag">{{this}}</button>
               {{/each}}
-              <button onclick="showTagList()" class="dropbtn">+</button>
-                <div id="tagOptionsDropdown" class="dropdown-content">
+              <button onclick="showTagList('{{_id}}')" class="dropbtn">+</button>
+                <div id="tagOptionsDropdown{{_id}}" class="dropdown-content">
                   {{#each alltags}}
                     <li><a href="#">{{this}}</a></li>
                   {{/each}}
