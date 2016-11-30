@@ -19,7 +19,7 @@ Template.Page_Template.helpers({
     'teacher', 'school',
     'handpump', 'water', 'nrega', 'electricity',
     'Hindi', 'Gondi', 
-    'Madhya Pradesh', 'Chatisghar',
+    'Madhya Pradesh', 'Chhattisgarh',
     'featured'
   ],
   addissues() {
@@ -54,7 +54,7 @@ Template.Page_Template.helpers({
     if (instance.state.get('showHindi')) {checkedTags.tags += "hindi"}
     if (instance.state.get('showGondi')) {checkedTags.tags += "gondi"}
     if (instance.state.get('showMadhyaPradesh')) {checkedTags.tags += "madhyapradesh"}
-    if (instance.state.get('showChatisghar')) {checkedTags.tags += "chatisghar"}
+    if (instance.state.get('showChhattisgarh')) {checkedTags.tags += "chatisghar"}
     if (instance.state.get('showFeatured')) {checkedTags.tags += "featured"}
     
     console.log(checkedTags)

@@ -67,6 +67,29 @@
         )
       }
 
+      function showTagList() {
+        document.getElementById("tagOptionsDropdown").classList.toggle("show");
+      }
+
+      // Close the dropdown menu if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
+
+      function addTagToIssue() {
+
+      }
+
     // This function is called when someone finishes with the Login
     // Button.  See the onlogin handler attached to it in the sample
     // code below.
@@ -186,6 +209,12 @@
               {{#each tags}}
                 <button type="button" disabled class="issue-tag">{{this}}</button>
               {{/each}}
+              <button onclick="showTagList()" class="dropbtn">+</button>
+                <div id="tagOptionsDropdown" class="dropdown-content">
+                  {{#each alltags}}
+                    <li><a href="#">{{this}}</a></li>
+                  {{/each}}
+                </div>
             </div>
           </div>
         </div>
