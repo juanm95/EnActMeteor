@@ -174,10 +174,13 @@
       <div class="all-posts-container" id="fb-posts">
         {{#each posts}}
         <div class="fb-post-container">
-          {{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
+          <!--{{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
           <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
           </div>
-          (This content has not been cached) {{/if}}
+          (This content has not been cached) {{/if}}-->
+          <div class="post">
+            {{message}}
+          </div>
           <div class="comments">
             {{#each comments}}
             <li>{{this}}</li>
