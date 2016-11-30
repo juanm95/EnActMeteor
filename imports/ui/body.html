@@ -151,13 +151,8 @@
     <div class="container">
       <header>
         <h1>EnAct</h1>
-        <h1>Open Issues: {{openIssuesCount}}</h1>
-        <!--<label class="show-open">
-          <input type="checkbox" /> Show open issues
-        </label>-->
-        <br/>
-
-        {{> loginButtons}}
+        <div class="login">{{> loginButtons}}</div>
+        <h2>Open Issues: {{openIssuesCount}}</h2>
         
         <div class="tag-list">
           {{#each alltags}}
@@ -174,20 +169,25 @@
       <div class="all-posts-container" id="fb-posts">
         {{#each posts}}
         <div class="fb-post-container">
-          {{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
-          <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+          <div class="fb-post">
+            {{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
+            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+            </div>
+            (This content has not been cached) {{/if}}
           </div>
-          (This content has not been cached) {{/if}}
-          <div class="comments">
-            {{#each comments}}
-            <li>{{this}}</li>
-            {{/each}}
+
+          <div class="extra-post-info">
+            <div class="comments">
+              {{#each comments}}
+              <li class="comment">{{this}}</li>
+              {{/each}}
+            </div>
+            <div class="issue-tag-list">
+              {{#each tags}}
+                <button type="button" disabled class="issue-tag">{{this}}</button>
+              {{/each}}
+            </div>
           </div>
-          <ul>
-            {{#each tags}}
-            <li>{{this}}</li>
-            {{/each}}
-          </ul>
         </div>
         {{/each}}
       </div>

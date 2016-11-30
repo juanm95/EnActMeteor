@@ -18,26 +18,6 @@ body {
  
   font-size: 14px;
 }
- 
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  min-height: 100%;
-  background: white;
-  background: #F9EEEC;
-  padding: 30px 50px;
-  border: 5px solid #79431F;
-}
-
-.all-posts-container {
-  /*column-count: 2;*/
-}
-
-.fb-post-container{
-  max-width: 500px;
-  padding: 10px 250px 10px 250px;
-  /*border: 5px solid #79431F;*/
-}
 
 header {
   color: #79431F;
@@ -92,13 +72,7 @@ form {
 .new-task input:focus{
   outline: 0;
 }
- 
-ul {
-  margin: 0;
-  padding: 0;
-  background: white;
-}
- 
+
 .delete {
   float: right;
   font-weight: bold;
@@ -108,6 +82,65 @@ ul {
   position: relative;
 }
  
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: white;
+  background: #F9EEEC;
+  padding: 30px 50px;
+  border: 5px solid #79431F;
+}
+
+.login {
+  text-align: right;
+}
+
+.taglist {
+  padding: 20px;
+}
+
+.all-posts-container {
+  width: 100%;
+}
+
+.fb-post-container{
+  padding: 10px;
+  width: 100%;
+  margin-top: 30px; /* To space rows apart */
+  display: flex;
+  display: -webkit-flex;
+}
+
+.comments {
+  overflow-y: scroll;
+  height: 400px;
+}
+
+iframe {
+  width: 500px !important;
+}
+
+.fb-post {
+  /*width: 50%;*/
+/*  max-width: 500px;*/
+  padding: 30px;
+  float: left;
+  flex: 2; /* Using 2:1 */
+}
+
+.extra-post-info {
+  /*margin-left: 50%;*/
+  overflow: hidden;
+  flex: 1; /* Using 2:1 */
+  padding-top: 30px;
+}
+
+.issue-tag-list {
+  margin: 0;
+  padding: 0;
+}
+
 li {
   position: relative;
   list-style: none;
@@ -130,6 +163,24 @@ li.checked .text {
 li.private {
   background: #eee;
   border-color: #ddd;
+}
+
+li.comment {
+  position: relative;
+  list-style: none;
+  padding: 5px;
+  border: #eee solid 1px;
+  background: white;
+}
+
+button.issue-tag {
+  position: relative;
+  list-style: none;
+  padding: 5px;
+  color: blue;
+  background: white;
+  border: #eee solid 1px;
+  font-size: 12px;
 }
  
 header .hide-completed {
