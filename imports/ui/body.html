@@ -5,7 +5,7 @@
     var unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
 
       function postsToDatabase() {
-        FB.api('/108247265894675/feed?fields=message, object_id, permalink_url, created_time, shares, updated_time',
+        FB.api('/108247265894675/feed?fields=message, object_id, permalink_url, created_time, shares, updated_time, link',
           'GET', {
             access_token: unlimitedPageAccessToken
           },
@@ -22,7 +22,8 @@
                     created_time: response.data[i].created_time,
                     shares: response.data[i].shares,
                     last_interaction_time: response.data[i].updated_time,
-                    comments: []
+                    comments: [],
+                    specific_link: response.data[i].link
                   },
                   $setOnInsert: {
                     tags: ["open"],
@@ -33,6 +34,7 @@
                 });
               }
               getCommentsOfEachPost();
+              getPhotosOfEachPost();
             }
           }
         );
@@ -63,6 +65,37 @@
                 }
               }
             );
+          }
+        )
+      }
+
+      function getPhotosOfEachPost(){
+        console.log("getting photos of each post")
+        Issues.find({}).forEach(
+          function(post){
+            var object_id = post.object_id
+            var id = post._id
+            //We only add a picture_url field if the post had a photo
+            if(object_id != null){
+              //Will the api call fail if the object_id is for a video?
+              FB.api(
+                '/' + object_id + '?fields=picture', 'GET',
+                {access_token: unlimitedPageAccessToken},
+                function (response) {
+                  console.log(id)
+                  if (response && !response.error) {
+                    Issues.update(
+                      { _id: id },
+                      { $set:
+                        {
+                          picture_url:response.picture
+                        }
+                      }
+                    )
+                  }
+                }
+              );
+            }
           }
         )
       }
@@ -101,7 +134,7 @@
 
       //------------- SAVING HTML OF POSTS --------------------//
 
-      var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
+      /*var innerHTMLs = {} // This is a map from id (in our database) to the most recent innerhtml.
       function saveInnerHTMLs() { // Goes through our innerHTMLs and updates them in the database
         Object.keys(innerHTMLs).forEach(function (key) {
           if (innerHTMLs[key] !== "") {
@@ -145,19 +178,14 @@
         characterData: true,
         subtree: true
       };
-      observer.observe(document.getElementById("fb-posts"), config);
+      observer.observe(document.getElementById("fb-posts"), config);*/
       //------------- SAVING HTML OF POSTS END --------------------//
     </script>
     <div class="container">
       <header>
         <h1>EnAct</h1>
-        <h1>Open Issues: {{openIssuesCount}}</h1>
-        <!--<label class="show-open">
-          <input type="checkbox" /> Show open issues
-        </label>-->
-        <br/>
-
-        {{> loginButtons}}
+        <div class="login">{{> loginButtons}}</div>
+        <h2>Open Issues: {{openIssuesCount}}</h2>
         
         <div class="tag-list">
           {{#each alltags}}
@@ -173,24 +201,29 @@
       <!-- In order to test the saving of innerHTML and then displaying that, first uncomment the old code to gather the innerHTML, then once the innerHTML has been added to the database (check it in meteor mongo), come back here, and comment it out. -->
       <div class="all-posts-container" id="fb-posts">
         {{#each posts}}
-        <div class="fb-post-container">
-          <!--{{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
-          <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+        <div class="fb-post-container" onclick="location.href=">
+          <a href={{url}}></a>
+          <div class="fb-post">
+             <img src={{picture_url}} alt="No picture">
+             {{message}}
+            <!--{{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
+            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
+            </div>
+            (This content has not been cached) {{/if}}-->
           </div>
-          (This content has not been cached) {{/if}}-->
-          <div class="post">
-            {{message}}
+
+          <div class="extra-post-info">
+            <div class="comments">
+              {{#each comments}}
+              <li class="comment">{{this}}</li>
+              {{/each}}
+            </div>
+            <div class="issue-tag-list">
+              {{#each tags}}
+                <button type="button" disabled class="issue-tag">{{this}}</button>
+              {{/each}}
+            </div>
           </div>
-          <div class="comments">
-            {{#each comments}}
-            <li>{{this}}</li>
-            {{/each}}
-          </div>
-          <ul>
-            {{#each tags}}
-            <li>{{this}}</li>
-            {{/each}}
-          </ul>
         </div>
         {{/each}}
       </div>
