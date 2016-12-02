@@ -115,6 +115,8 @@ form {
 .comments {
   overflow-y: scroll;
   height: 400px;
+  padding-bottom: 10px;
+  border-radius: 8px;
 }
 
 iframe {
@@ -141,10 +143,51 @@ iframe {
   padding: 0;
 }
 
+.dropbtn {
+    background-color: white;
+    color: black;
+    /*padding: 16px;*/
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: lightgray; 
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    max-height: 150px;
+    position: absolute;
+    overflow-y: scroll;
+    background-color: white;
+    min-width: 160px;
+    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 6px, 2px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
 li {
   position: relative;
   list-style: none;
-  padding: 15px;
+  padding: 10px;
   border-bottom: #eee solid 1px;
 }
  
@@ -168,9 +211,9 @@ li.private {
 li.comment {
   position: relative;
   list-style: none;
-  padding: 5px;
+  padding: 10px;
   border: #eee solid 1px;
-  background: white;
+  background: #efe6e5;
 }
 
 button.issue-tag {
