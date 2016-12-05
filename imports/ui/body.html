@@ -187,16 +187,13 @@
         <div id="status">
         </div>
       </header>
+
       <!-- In order to test the saving of innerHTML and then displaying that, first uncomment the old code to gather the innerHTML, then once the innerHTML has been added to the database (check it in meteor mongo), come back here, and comment it out. -->
-      <div class="all-posts-container" id="fb-posts">
+      <div class="all-posts-container">
         {{#each posts}}
         <div class="fb-post-container">
           <div class="fb-post">
-            {{#if isCached}} {{{innerHTML}}} (This content has been cached) {{else}}
-            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-show-text="true" id="{{_id}}">
-            </div>
-            (This content has not been cached) 
-            {{/if}}
+            {{{innerHTML}}} 
           </div>
 
           <div class="extra-post-info">
@@ -221,6 +218,17 @@
         {{/each}}
       </div>
       <button id="requestPages">Request More Content</button>
+      <div class="all-posts-container" id="fb-posts">
+        {{#each uncached}}
+        <div class="fb-post-container">
+          <div class="fb-post">
+            <div class="fb-post new-post" data-href="{{url}}" data-width="500" data-height="1000" data-show-text="true" id="{{_id}}">
+            </div>
+            (This content has not been cached) 
+          </div>
+        </div>
+        {{/each}}
+      </div>
     </div>
   </body>
 </template>

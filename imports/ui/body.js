@@ -68,11 +68,16 @@ Template.Page_Template.helpers({
     
     console.log(checkedTags)
     //Display issues which have all checked tags
-    var query = {}
+    var query = {isCached: true}
     var settings = { sort: { last_interaction_time: -1 }, limit: issuesPerPage * instance.state.get('pagesRequested')};
     if (checkedTags.length !== 0) {
       query.tags = {$all: checkedTags};
     }
+    return Issues.find(query, settings);  
+  },
+  uncached() {
+    var query = {isCached: false}
+    var settings = { sort: { last_interaction_time: -1 }};
     return Issues.find(query, settings);  
   },
   openIssuesCount() {
