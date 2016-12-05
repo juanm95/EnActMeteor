@@ -36,7 +36,7 @@ Template.Page_Template.helpers({
     //console.log(issues)
   },
   currentUserIsAdmin() {
-    var user = Meteor.user
+    var user = Meteor.user()
     if(user != null){
       return user.username === "admin"
     }

@@ -86,18 +86,20 @@
         }
       }
 
-      function addTagToIssue() {
-
+      function addTagToIssue(tag, id) {
+        Issues.update(
+          {_id: id}, 
+          {$addToSet: {tags: tag}}
+        )
       }
 
-    // This function is called when someone finishes with the Login
-    // Button.  See the onlogin handler attached to it in the sample
-    // code below.
-    // function checkLoginState() {
-    //   FB.getLoginStatus(function(response) {
-    //     statusChangeCallback(response);
-    //   });
-    // }
+      function deleteTag(tag, id){
+        console.log(id)
+        Issues.update(
+          {_id: id}, 
+          { $pull: {tags: tag} }
+        )
+      }
 
       window.fbAsyncInit = function () {
         FB.init({
@@ -196,25 +198,27 @@
             {{{innerHTML}}} 
           </div>
 
-          <div class="extra-post-info">
-            <div class="comments">
-              {{#each comments}}
-              <li class="comment">{{this}}</li>
-              {{/each}}
-            </div>
-            <div class="issue-tag-list">
-              {{#each tags}}
-                <button type="button" disabled class="issue-tag">{{this}}</button>
-              {{/each}}
-              <button onclick="showTagList('{{_id}}')" class="dropbtn">+</button>
-                <div id="tagOptionsDropdown{{_id}}" class="dropdown-content">
-                  {{#each alltags}}
-                    <li><a href="#">{{this}}</a></li>
+            <div class="extra-post-info">
+              <div class="comments">
+                {{#each comments}}
+                <li class="comment">{{this}}</li>
+                {{/each}}
+              </div>
+              {{#if currentUserIsAdmin}}
+                <div class="issue-tag-list">
+                  {{#each tags}}
+                    <button type="button" onclick ="deleteTag('{{this}}','{{../_id}}')" class="issue-tag">{{this}}</button>
                   {{/each}}
+                  <button onclick="showTagList('{{_id}}')" class="dropbtn">+</button>
+                  <div id="tagOptionsDropdown{{_id}}" class="dropdown-content">
+                    {{#each alltags}}
+                      <li><button onclick="addTagToIssue('{{this}}', '{{../_id}}')">{{this}}</button></li>
+                    {{/each}}
+                  </div>
                 </div>
+              {{/if}}
             </div>
           </div>
-        </div>
         {{/each}}
       </div>
       <button id="requestPages">Request More Content</button>
