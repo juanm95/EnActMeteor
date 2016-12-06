@@ -39,7 +39,6 @@
       }
 
       function getCommentsOfEachPost() {
-        console.log("getCommentsOfEachPost has been called.");
         Issues.find({}).forEach(
           function (post) {
             var id = post._id
@@ -50,7 +49,6 @@
                 order: 'reverse_chronological'
               },
               function (response) {
-                console.log("Comment response: " + response)
                 if (response && !response.error) {
                   for (i = 0; i < response.data.length; i++) {
                     var message = response.data[i].message
@@ -96,7 +94,6 @@
       }
 
       function deleteTag(tag, id){
-        console.log(id)
         Issues.update(
           {_id: id}, 
           { $pull: {tags: tag} }
@@ -104,13 +101,12 @@
       }
 
       window.fbAsyncInit = function () {
-        console.log("fbAsyncInit")
         FB.init({
           appId: '1293600994030280',
           cookie: true, // enable cookies to allow the server to access 
           // the session
           xfbml: true, // parse social plugins on this page
-          version: 'v2.5' // use graph api version 2.5
+          version: 'v2.8' // use graph api version 2.5
         })
         postsToDatabase()
         getCommentsOfEachPost()
@@ -124,7 +120,6 @@
         js.id = id;
         js.src = "//connect.facebook.net/en_US/sdk.js";
         fjs.parentNode.insertBefore(js, fjs);
-        console.log("loaded sdk at " + new Date());
       }(document, 'script', 'facebook-jssdk'));
 
       //------------- SAVING HTML OF POSTS --------------------//

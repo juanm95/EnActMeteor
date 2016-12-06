@@ -31,10 +31,6 @@ Template.Page_Template.helpers({
     'Madhya Pradesh', 'Chhattisgarh',
     'featured'
   ],
-  addissues() {
-    console.log("add")
-    //console.log(issues)
-  },
   currentUserIsAdmin() {
     var user = Meteor.user()
     if(user != null){
@@ -66,7 +62,6 @@ Template.Page_Template.helpers({
     if (instance.state.get('showChhattisgarh')) {checkedTags.push("chatisghar")}
     if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
     
-    console.log(checkedTags)
     //Display issues which have all checked tags
     var query = {isCached: true}
     var settings = { sort: { last_interaction_time: -1 }, limit: issuesPerPage * instance.state.get('pagesRequested')};
@@ -96,14 +91,12 @@ Template.Page_Template.events({
     }).replace(/\s/g, '');
 
     var showTaggedIssues = "show" + formattedTag
-    console.log(showTaggedIssues)
 
     //Instance state for showing each tag corresponds to value of checkbox
     instance.state.set(showTaggedIssues, event.target.checked)
   },
 
   'click #requestPages'(event, instance) {
-    console.log("content requested");
     instance.state.set("pagesRequested", instance.state.get("pagesRequested") + 1)
   }
 });
