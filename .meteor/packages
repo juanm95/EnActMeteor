@@ -27,3 +27,5 @@ kadira:blaze-layout
 arillo:flow-router-helpers
 alethes:pages
 iron:router
+accounts-facebook
+service-configuration
