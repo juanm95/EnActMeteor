@@ -50,21 +50,21 @@ Template.Page_Template.helpers({
     if (instance.state.get('showOpen')) {checkedTags.push("open")}
     if (instance.state.get('showClosed')) {checkedTags.push("closed")}
     if (instance.state.get('showCoalMining')) {checkedTags.push("coalmining")}
-    if (instance.state.get('showRation')) {checkedTags.tags += "ration"}
-    if (instance.state.get('showFood')) {checkedTags.tags += "food"}
-    if (instance.state.get('showForest')) {checkedTags.tags += "forest"}
-    if (instance.state.get('showLand')) {checkedTags.tags += "land"}
-    if (instance.state.get('showTeacher')) {checkedTags.tags += "teacher"}
-    if (instance.state.get('showSchool')) {checkedTags.tags += "school"}
-    if (instance.state.get('showHandpump')) {checkedTags.tags += "handpump"}
-    if (instance.state.get('showWater')) {checkedTags.tags += "water"}
-    if (instance.state.get('showNrega')) {checkedTags.tags += "nrega"}
-    if (instance.state.get('showElectricity')) {checkedTags.tags += "electricity"}
-    if (instance.state.get('showHindi')) {checkedTags.tags += "hindi"}
-    if (instance.state.get('showGondi')) {checkedTags.tags += "gondi"}
-    if (instance.state.get('showMadhyaPradesh')) {checkedTags.tags += "madhyapradesh"}
-    if (instance.state.get('showChhattisgarh')) {checkedTags.tags += "chatisghar"}
-    if (instance.state.get('showFeatured')) {checkedTags.tags += "featured"}
+    if (instance.state.get('showRation')) {checkedTags.push("ration")}
+    if (instance.state.get('showFood')) {checkedTags.push("food")}
+    if (instance.state.get('showForest')) {checkedTags.push("forest")}
+    if (instance.state.get('showLand')) {checkedTags.push("land")}
+    if (instance.state.get('showTeacher')) {checkedTags.push("teacher")}
+    if (instance.state.get('showSchool')) {checkedTags.push("school")}
+    if (instance.state.get('showHandpump')) {checkedTags.push("handpump")}
+    if (instance.state.get('showWater')) {checkedTags.push("water")}
+    if (instance.state.get('showNrega')) {checkedTags.push("nrega")}
+    if (instance.state.get('showElectricity')) {checkedTags.push("electricity")}
+    if (instance.state.get('showHindi')) {checkedTags.push("hindi")}
+    if (instance.state.get('showGondi')) {checkedTags.push("gondi")}
+    if (instance.state.get('showMadhyaPradesh')) {checkedTags.push("madhyapradesh")}
+    if (instance.state.get('showChhattisgarh')) {checkedTags.push("chatisghar")}
+    if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
     
     console.log(checkedTags)
     //Display issues which have all checked tags
