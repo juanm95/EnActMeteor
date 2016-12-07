@@ -45,7 +45,7 @@ Template.Page_Template.helpers({
     var checkedTags = []
     if (instance.state.get('showOpen')) {checkedTags.push("open")}
     if (instance.state.get('showClosed')) {checkedTags.push("closed")}
-    if (instance.state.get('showCoalMining')) {checkedTags.push("coalmining")}
+    if (instance.state.get('showCoalMining')) {checkedTags.push("coal mining")}
     if (instance.state.get('showRation')) {checkedTags.push("ration")}
     if (instance.state.get('showFood')) {checkedTags.push("food")}
     if (instance.state.get('showForest')) {checkedTags.push("forest")}
@@ -56,13 +56,14 @@ Template.Page_Template.helpers({
     if (instance.state.get('showWater')) {checkedTags.push("water")}
     if (instance.state.get('showNrega')) {checkedTags.push("nrega")}
     if (instance.state.get('showElectricity')) {checkedTags.push("electricity")}
-    if (instance.state.get('showHindi')) {checkedTags.push("hindi")}
-    if (instance.state.get('showGondi')) {checkedTags.push("gondi")}
-    if (instance.state.get('showMadhyaPradesh')) {checkedTags.push("madhyapradesh")}
-    if (instance.state.get('showChhattisgarh')) {checkedTags.push("chatisghar")}
+    if (instance.state.get('showHindi')) {checkedTags.push("Hindi")}
+    if (instance.state.get('showGondi')) {checkedTags.push("Gondi")}
+    if (instance.state.get('showMadhyaPradesh')) {checkedTags.push("Madhya Pradesh")}
+    if (instance.state.get('showChhattisgarh')) {checkedTags.push("Chhattisgarh")}
     if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
     
     //Display issues which have all checked tags
+    console.log(checkedTags)
     var query = {}
     var settings = { sort: { last_interaction_time: -1 }, limit: issuesPerPage * instance.state.get('pagesRequested')};
     if (checkedTags.length !== 0) {
