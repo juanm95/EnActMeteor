@@ -31,6 +31,7 @@ header {
  
 #login-buttons {
   display: block;
+  float: right;
 }
 
 .headerButton {
@@ -46,19 +47,24 @@ header {
 }
  
 h1 {
-  font-size: 1.5em;
-  margin: 0;
+  font-size: 50px;
+  margin-left: 50px;
+  vertical-align: center;
   margin-bottom: 10px;
   display: inline-block;
-  margin-right: 1em;
 }
- 
+
 form {
   margin-top: 10px;
   margin-bottom: -10px;
   position: relative;
 }
  
+h3 {
+  margin-top: 0px;
+  color: #79431F
+}
+
 .new-task input {
   box-sizing: border-box;
   padding: 10px 0;

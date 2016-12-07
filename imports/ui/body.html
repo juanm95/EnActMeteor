@@ -36,10 +36,11 @@
       }
     </script>
     <div class="container">
-      <header>
-        <h1>EnAct</h1>
+      <header>  
         <div class="login">{{> loginButtons}}</div>
-        <h2>Open Issues: {{openIssuesCount}}</h2>
+        <img id="logo" src="http://cgnetswara.org/loudblog/custom/templates/default/swaracover-small.png" width="220" alt="CGNet Swara Logo">
+        <h1>EnAct</h1>
+        <h3>Open Issues: {{openIssuesCount}}</h3>
         
         <div class="tag-list">
           {{#each alltags}}
@@ -63,6 +64,7 @@
 
             <div class="extra-post-info">
               <div class="comments">
+                <h3>Comments</h3>
                 {{#each comments}}
                 <li class="comment">{{this}}</li>
                 {{/each}}
