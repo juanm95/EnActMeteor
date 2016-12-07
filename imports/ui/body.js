@@ -63,7 +63,7 @@ Template.Page_Template.helpers({
     if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
     
     //Display issues which have all checked tags
-    var query = {isCached: true}
+    var query = {}
     var settings = { sort: { last_interaction_time: -1 }, limit: issuesPerPage * instance.state.get('pagesRequested')};
     if (checkedTags.length !== 0) {
       query.tags = {$all: checkedTags};
