@@ -94,6 +94,7 @@ Template.Page_Template.events({
     var showTaggedIssues = "show" + formattedTag
 
     //Instance state for showing each tag corresponds to value of checkbox
+    instance.state.set("pagesRequested", 1)
     instance.state.set(showTaggedIssues, event.target.checked)
   },
 
