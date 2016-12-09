@@ -5,32 +5,30 @@ import {
 from 'meteor/meteor';
 
 function getCommentsOfEachPost(unlimitedPageAccessToken) {
-  Issues.find({}).forEach(
-    function (post) {
-      var id = post._id
-      FB.api(
-        '/' + id + '/comments', 'GET', {
-          access_token: unlimitedPageAccessToken,
-          summary: 'true',
-          order: 'reverse_chronological'
-        },
-        Meteor.bindEnvironment(function (response) {
-          if (response && !response.error) {
-            for (i = 0; i < response.data.length; i++) {
-              var message = response.data[i].message
-              Issues.update({
-                _id: id
-              }, {
-                $addToSet: {
-                  comments: message
-                }
-              })
+  var post = Issues.findOne({})
+  console.log(post);
+  var id = post._id
+  FB.api(
+    '/' + id + '/comments', 'GET', {
+      access_token: unlimitedPageAccessToken,
+      summary: 'true',
+      order: 'reverse_chronological'
+    },
+    Meteor.bindEnvironment(function (response) {
+      if (response && !response.error) {
+        for (i = 0; i < response.data.length; i++) {
+          var message = response.data[i].message
+          Issues.update({
+            _id: id
+          }, {
+            $addToSet: {
+              comments: message
             }
-          }
-        })
-      );
-    }
-  )
+          })
+        }
+      }
+    })
+  );
 }
 
 var FB = require('fb');
@@ -70,7 +68,7 @@ Meteor.startup(() => {
           }
         })
       )
-    }, 10 * 1000)
+    }, 120 * 1000)
     // code to run on server at startup
   if (Meteor.users.find({
       username: "admin"
