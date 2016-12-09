@@ -4,33 +4,65 @@ import {
 }
 from 'meteor/meteor';
 
+function getCommentsAsync(parameters, callback) {
+  return FB.api('/' + post._id + '/comments', 'GET', params)
+}
+
 function getCommentsOfEachPost(unlimitedPageAccessToken) {
   var posts = Issues.find({})
   posts.forEach(function (post) {
-    var id = post._id
-    FB.api(
-      '/' + id + '/comments', 'GET', {
+//    console.log("For post: " + post.url);
+    var getCommentsSynchronous = Meteor.wrapAsync(FB.api, FB);
+    try {
+      var response = getCommentsSynchronous('/' + post._id + '/comments', 'GET', {
         access_token: unlimitedPageAccessToken,
         summary: 'true',
         order: 'reverse_chronological'
-      },
-      Meteor.bindEnvironment(function (response) {
-        console.log("----------------------########################-------------------------")
-        console.log(response)
-        if (response && !response.error) {
-          for (i = 0; i < response.data.length; i++) {
-            var message = response.data[i].message
-            Issues.update({
-              _id: id
-            }, {
-              $addToSet: {
-                comments: message
-              }
-            })
-          }
+      });
+    } catch (error) {
+      response = error
+      if (response && !response.error) {
+//        console.log("----------------------########################-------------------------")
+//        console.log(response.data[0])
+//        if (response.data[0] === undefined) {
+//          console.log(response)
+//        }
+        for (i = 0; i < response.data.length; i++) {
+          var message = response.data[i].message
+          Issues.update({
+            _id: post._id
+          }, {
+            $addToSet: {
+              comments: message
+            }
+          });
         }
-      })
-    );
+      }
+    }
+    //    var id = post._id
+    //    FB.api(
+    //      '/' + id + '/comments', 'GET', {
+    //        access_token: unlimitedPageAccessToken,
+    //        summary: 'true',
+    //        order: 'reverse_chronological'
+    //      },
+    //      Meteor.bindEnvironment(function (response) {
+    //        if (response && !response.error) {
+    //          console.log("----------------------########################-------------------------")
+    //          console.log(response.data[0])
+    //          for (i = 0; i < response.data.length; i++) {
+    //            var message = response.data[i].message
+    //            Issues.update({
+    //              _id: id
+    //            }, {
+    //              $addToSet: {
+    //                comments: message
+    //              }
+    //            });
+    //          }
+    //        }
+    //      })
+    //    );
   });
 }
 
@@ -46,7 +78,6 @@ Meteor.startup(() => {
         },
         Meteor.bindEnvironment(function (response) {
           if (response && !response.error) {
-            console.log(response);
             for (i = 0; i < response.data.length; i++) {
               Issues.update({
                 _id: response.data[i].id
@@ -68,11 +99,11 @@ Meteor.startup(() => {
                 upsert: true
               });
             }
-            getCommentsOfEachPost(unlimitedPageAccessToken);
           }
         })
-      )
-    }, 20 * 1000)
+      );
+      getCommentsOfEachPost(unlimitedPageAccessToken);
+    }, 120 * 1000)
     // code to run on server at startup
   if (Meteor.users.find({
       username: "admin"
