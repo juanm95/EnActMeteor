@@ -5,34 +5,38 @@ import {
 from 'meteor/meteor';
 
 function getCommentsOfEachPost(unlimitedPageAccessToken) {
-  var post = Issues.findOne({})
-  console.log(post);
-  var id = post._id
-  FB.api(
-    '/' + id + '/comments', 'GET', {
-      access_token: unlimitedPageAccessToken,
-      summary: 'true',
-      order: 'reverse_chronological'
-    },
-    Meteor.bindEnvironment(function (response) {
-      if (response && !response.error) {
-        for (i = 0; i < response.data.length; i++) {
-          var message = response.data[i].message
-          Issues.update({
-            _id: id
-          }, {
-            $addToSet: {
-              comments: message
-            }
-          })
+  var posts = Issues.find({})
+  posts.forEach(function (post) {
+    var id = post._id
+    FB.api(
+      '/' + id + '/comments', 'GET', {
+        access_token: unlimitedPageAccessToken,
+        summary: 'true',
+        order: 'reverse_chronological'
+      },
+      Meteor.bindEnvironment(function (response) {
+        console.log("----------------------########################-------------------------")
+        console.log(response)
+        if (response && !response.error) {
+          for (i = 0; i < response.data.length; i++) {
+            var message = response.data[i].message
+            Issues.update({
+              _id: id
+            }, {
+              $addToSet: {
+                comments: message
+              }
+            })
+          }
         }
-      }
-    })
-  );
+      })
+    );
+  });
 }
 
 var FB = require('fb');
 Meteor.startup(() => {
+  Comments = new Meteor.EnvironmentVariable;
   const unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
   FB.setAccessToken(unlimitedPageAccessToken);
   Meteor.setInterval(function () {
@@ -68,7 +72,7 @@ Meteor.startup(() => {
           }
         })
       )
-    }, 120 * 1000)
+    }, 20 * 1000)
     // code to run on server at startup
   if (Meteor.users.find({
       username: "admin"
