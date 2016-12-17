@@ -29,7 +29,7 @@ Template.Page_Template.helpers({
     'handpump', 'water', 'nrega', 'electricity',
     'Hindi', 'Gondi', 
     'Madhya Pradesh', 'Chhattisgarh',
-    'featured'
+    'featured', 'on cgnetswara.org'
   ],
   currentUserIsAdmin() {
     var user = Meteor.user()
@@ -61,6 +61,8 @@ Template.Page_Template.helpers({
     if (instance.state.get('showMadhyaPradesh')) {checkedTags.push("Madhya Pradesh")}
     if (instance.state.get('showChhattisgarh')) {checkedTags.push("Chhattisgarh")}
     if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
+    if (instance.state.get('showOnCgnetswara.org')) {checkedTags.push("on cgnetswara.org")}
+
     
     //Display issues which have all checked tags
     console.log(checkedTags)
@@ -87,12 +89,15 @@ Template.Page_Template.events({
     var tag = event.target.name
 
     //Capitalize each word and take out spaces
-    var formattedTag = tag.replace(/\w+/g, function(txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1);
-    }).replace(/\s/g, '');
-
-    var showTaggedIssues = "show" + formattedTag
-
+    // var formattedTag = tag.replace(/\w+/g, function(txt) {
+    //   return txt.charAt(0).toUpperCase() + txt.substr(1);
+    // }).replace(/\s/g, '');
+    var formattedTag = "";
+    tag.split(" ").forEach(function(word){
+      formattedTag += word.charAt(0).toUpperCase() + word.substring(1);
+    });
+    var showTaggedIssues = "show" + formattedTag;
+    console.log(showTaggedIssues);
     //Instance state for showing each tag corresponds to value of checkbox
     instance.state.set("pagesRequested", 1)
     instance.state.set(showTaggedIssues, event.target.checked)
