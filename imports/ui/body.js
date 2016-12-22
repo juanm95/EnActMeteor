@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import '../api/issues.js';
+import '../api/tags.js';
 
 
 // Template imports
@@ -22,56 +23,50 @@ const issuesPerPage = 5;
 var pagesRequested = 1;
 
 Template.Page_Template.helpers({
-  alltags: [
-    'open', 'closed', 
-    'coal mining', 'ration', 'food', 'forest', 'land',
-    'teacher', 'school',
-    'handpump', 'water', 'nrega', 'electricity',
-    'Hindi', 'Gondi', 
-    'Madhya Pradesh', 'Chhattisgarh',
-    'featured', 'on cgnetswara.org'
-  ],
+  alltags() {
+    var tags;
+    Tags.find({}, {_id:0, tags:1}).forEach(function(doc){
+      tags = doc.tags;
+    });
+    return tags;
+  },
   currentUserIsAdmin() {
-    var user = Meteor.user()
+    var user = Meteor.user();
     if(user != null){
-      return user.username === "admin"
+      return user.username === "admin";
     }
-    return false
+    return false;
   },
   posts() {
+    //Get the names of all tags that are checked
+    //var checkedTags = get_selected_tag_filters(Template.instance);
     const instance = Template.instance();
-
-    //Mark tags which are checked
-    var checkedTags = []
-    if (instance.state.get('showOpen')) {checkedTags.push("open")}
-    if (instance.state.get('showClosed')) {checkedTags.push("closed")}
-    if (instance.state.get('showCoalMining')) {checkedTags.push("coal mining")}
-    if (instance.state.get('showRation')) {checkedTags.push("ration")}
-    if (instance.state.get('showFood')) {checkedTags.push("food")}
-    if (instance.state.get('showForest')) {checkedTags.push("forest")}
-    if (instance.state.get('showLand')) {checkedTags.push("land")}
-    if (instance.state.get('showTeacher')) {checkedTags.push("teacher")}
-    if (instance.state.get('showSchool')) {checkedTags.push("school")}
-    if (instance.state.get('showHandpump')) {checkedTags.push("handpump")}
-    if (instance.state.get('showWater')) {checkedTags.push("water")}
-    if (instance.state.get('showNrega')) {checkedTags.push("nrega")}
-    if (instance.state.get('showElectricity')) {checkedTags.push("electricity")}
-    if (instance.state.get('showHindi')) {checkedTags.push("Hindi")}
-    if (instance.state.get('showGondi')) {checkedTags.push("Gondi")}
-    if (instance.state.get('showMadhyaPradesh')) {checkedTags.push("Madhya Pradesh")}
-    if (instance.state.get('showChhattisgarh')) {checkedTags.push("Chhattisgarh")}
-    if (instance.state.get('showFeatured')) {checkedTags.push("featured")}
-    if (instance.state.get('showOnCgnetswara.org')) {checkedTags.push("on cgnetswara.org")}
-
+    var checkedTags = [];
+    var keysObj = instance.state.all();
+    Object.keys(keysObj).forEach(function(key){
+      if (key != "pagesRequested" && keysObj[key]){
+        checkedTags.push(key);
+      }
+    });
     
     //Display issues which have all checked tags
-    console.log(checkedTags)
-    var query = {}
+    var query = {};
     var settings = { sort: { last_interaction_time: -1 }, limit: issuesPerPage * instance.state.get('pagesRequested')};
     if (checkedTags.length !== 0) {
       query.tags = {$all: checkedTags};
     }
     return Issues.find(query, settings);  
+  },
+  selected_tag_filters(){
+    const instance = Template.instance();
+    var checkedTags = [];
+    var keysObj = instance.state.all();
+    Object.keys(keysObj).forEach(function(key){
+      if (key != "pagesRequested" && keysObj[key]){
+        checkedTags.push(key);
+      }
+    });
+    return checkedTags;
   },
   uncached() {
     var query = {isCached: false}
@@ -84,23 +79,38 @@ Template.Page_Template.helpers({
 });
 
 Template.Page_Template.events({
+  'submit .add-new-tag'(event) {
+    // Prevent default browser form submit
+    event.preventDefault();
+
+    // Get value from form element
+    const target = event.target;
+    const text = target.text.value;
+    const instance = Template.instance();
+ 
+    // Insert a task into the collection
+    Tags.update(
+      {_id:"alltags"},
+      {$addToSet: {tags: text} }
+    );
+    //make layout redisplay
+    instance.state.set(text, false);
+    // Clear form
+    target.text.value = '';
+  },
   //Handle event of tag boxes being checked
   'change .checkBoxClass input'(event, instance) {
-    var tag = event.target.name
+    var tag = event.target.name;
+    instance.state.set("pagesRequested", 1);
+    instance.state.set(tag, event.target.checked);
+  },
 
-    //Capitalize each word and take out spaces
-    // var formattedTag = tag.replace(/\w+/g, function(txt) {
-    //   return txt.charAt(0).toUpperCase() + txt.substr(1);
-    // }).replace(/\s/g, '');
-    var formattedTag = "";
-    tag.split(" ").forEach(function(word){
-      formattedTag += word.charAt(0).toUpperCase() + word.substring(1);
-    });
-    var showTaggedIssues = "show" + formattedTag;
-    console.log(showTaggedIssues);
-    //Instance state for showing each tag corresponds to value of checkbox
-    instance.state.set("pagesRequested", 1)
-    instance.state.set(showTaggedIssues, event.target.checked)
+  'click #addNewFilterTag'(event, instance) {
+    instance.state.set(event.target.name, true);
+  },
+
+  'click #deleteFilterTag'(event, instance) {
+    instance.state.set(event.target.name, false);
   },
 
   'click #requestPages'(event, instance) {

@@ -1,4 +1,5 @@
 import '../imports/api/issues.js'
+import '../imports/api/tags.js'
 import {
   Meteor
 }
@@ -75,6 +76,22 @@ function getOriginTag(message){
 
 var FB = require('fb');
 Meteor.startup(() => {
+
+  Tags.update(
+    {_id : "alltags"},
+    {$setOnInsert :
+      {tags: ['open', 'closed', 
+        'coal mining', 'ration', 'food', 'forest', 'land',
+        'teacher', 'school',
+        'handpump', 'water', 'nrega', 'electricity',
+        'Hindi', 'Gondi', 
+        'Madhya Pradesh', 'Chhattisgarh',
+        'featured', 'on cgnetswara.org']
+      }
+    },
+    {upsert: true}
+  );
+
   Comments = new Meteor.EnvironmentVariable;
   const unlimitedPageAccessToken = 'EAASYhfO68sgBANUSnleUD0JXcFMU3KwyrpBI96BQG9LKuXGTIWcWe4lZBxjlcOYQjYdZCPGWaMkg94o2REH22YHPhvnJZCTUsvPpbnhPyFlelijZAK42c5X1m230bkpQ2OKMz6MHYZAmc9e3vs5a1IuxKmQC24HyV1CB2Eqy7LAZDZD'
   FB.setAccessToken(unlimitedPageAccessToken);

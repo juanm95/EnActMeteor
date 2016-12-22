@@ -2,6 +2,11 @@
 
   <body>
     <script>
+
+      function showFilterTagList(){
+        document.getElementById("filterTagList").classList.toggle("show");
+      }
+
       function showTagList(id) {
         document.getElementById("tagOptionsDropdown" + id).classList.toggle("show");
       }
@@ -35,26 +40,33 @@
         )
       }
     </script>
+
     <div class="container">
       <header>  
         <div class="login">{{> loginButtons}}</div>
         <img id="logo" src="http://cgnetswara.org/loudblog/custom/templates/default/swaracover-small.png" width="220" alt="CGNet Swara Logo">
         <h1>EnAct</h1>
         <h3>Open Issues: {{openIssuesCount}}</h3>
-        
-        <div class="tag-list">
-          {{#each alltags}}
-            <label class="checkBoxClass">
-              <input type="checkbox" name={{this}}> {{this}}
-            </label>
-          {{/each}}
-       </div>
+        <h5>Current tag filters: </h5>
 
-        <div id="status">
+         <div class="tag-list">
+          {{#each selected_tag_filters}}
+            <button id="deleteFilterTag" name={{this}}>{{this}}</button>
+          {{/each}}
+          <button onclick="showFilterTagList()" class="dropbtn">+</button>
+          <div id="filterTagList" class="dropdown-content">
+          {{#each alltags}}
+            <li><button id="addNewFilterTag" name={{this}}>{{this}}</button></li>
+          {{/each}}
+          </div>
         </div>
+        {{#if currentUserIsAdmin}}
+          <form class="add-new-tag">
+            <input type="text" name="text" placeholder="Type to add a new tag" />
+          </form>
+        {{/if}}
       </header>
 
-      <!-- In order to test the saving of innerHTML and then displaying that, first uncomment the old code to gather the innerHTML, then once the innerHTML has been added to the database (check it in meteor mongo), come back here, and comment it out. -->
       <div class="all-posts-container">
         {{#each posts}}
         <div class="fb-post-container">
