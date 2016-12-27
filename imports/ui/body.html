@@ -67,37 +67,35 @@
         {{/if}}
       </header>
 
-      <div class="all-posts-container">
+      <ul class="all-posts-container">
         {{#each posts}}
-        <div class="fb-post-container">
-          <div class="fb-post">
-            <iframe name="f4797221a7347" width="500px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:post Facebook Social Plugin" src="https://www.facebook.com/v2.8/plugins/post.php?app_id=1293600994030280&amp;channel=http%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2F_IDqWBiKXtV.js%3Fversion%3D42%23cb%3Df9984fc4ef0228%26domain%3Dlocalhost%26origin%3Dhttp%253A%252F%252Flocalhost%253A3000%252Ff36f79e75ea0b68%26relation%3Dparent.parent&amp;container_width=60&amp;height=1000&amp;href={{url}};locale=en_US&amp;sdk=joey&amp;show_text=true&amp;width=500" style="border: none; visibility: visible; width: 350px; height: 480px;" class=""></iframe>
-          </div>
+        <li class="fb-post">
+          <iframe name="f4797221a7347" width="500px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:post Facebook Social Plugin" src="https://www.facebook.com/v2.8/plugins/post.php?app_id=1293600994030280&amp;channel=http%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2F_IDqWBiKXtV.js%3Fversion%3D42%23cb%3Df9984fc4ef0228%26domain%3Dlocalhost%26origin%3Dhttp%253A%252F%252Flocalhost%253A3000%252Ff36f79e75ea0b68%26relation%3Dparent.parent&amp;container_width=60&amp;height=1000&amp;href={{url}};locale=en_US&amp;sdk=joey&amp;show_text=true&amp;width=500" style="border: none; visibility: visible; width: 350px; height: 480px;" class=""></iframe>
+        </li>
 
-            <div class="extra-post-info">
-              <div class="comments">
-                <h3>Comments</h3>
-                {{#each comments}}
-                <li class="comment">{{this}}</li>
+        <li class="extra-post-info">
+          <div class="comments-title"><h3>Comments</h3></div>
+          <ul class="comments">
+            {{#each comments}}
+            <li class="comment">{{this}}</li>
+            {{/each}}
+          </ul>
+          {{#if currentUserIsAdmin}}
+            <div class="issue-tag-list">
+              {{#each tags}}
+                <button type="button" onclick ="deleteTag('{{this}}','{{../_id}}')" class="issue-tag">{{this}}</button>
+              {{/each}}
+              <button onclick="showTagList('{{_id}}')" class="dropbtn">+</button>
+              <div id="tagOptionsDropdown{{_id}}" class="dropdown-content">
+                {{#each alltags}}
+                  <li><button onclick="addTagToIssue('{{this}}', '{{../_id}}')">{{this}}</button></li>
                 {{/each}}
               </div>
-              {{#if currentUserIsAdmin}}
-                <div class="issue-tag-list">
-                  {{#each tags}}
-                    <button type="button" onclick ="deleteTag('{{this}}','{{../_id}}')" class="issue-tag">{{this}}</button>
-                  {{/each}}
-                  <button onclick="showTagList('{{_id}}')" class="dropbtn">+</button>
-                  <div id="tagOptionsDropdown{{_id}}" class="dropdown-content">
-                    {{#each alltags}}
-                      <li><button onclick="addTagToIssue('{{this}}', '{{../_id}}')">{{this}}</button></li>
-                    {{/each}}
-                  </div>
-                </div>
-              {{/if}}
             </div>
-          </div>
+          {{/if}}
+        </li>
         {{/each}}
-      </div>
+      </ul>
       <button id="requestPages">request more content</button>
     </div>
   </body>

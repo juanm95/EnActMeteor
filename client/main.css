@@ -89,7 +89,7 @@ h3 {
 }
  
 .container {
-  max-width: 1000px;
+  max-width: 1400px;
   margin: 0 auto;
   min-height: 100%;
   background: white;
@@ -106,42 +106,35 @@ h3 {
   padding: 20px;
 }
 
-.all-posts-container {
+ul.all-posts-container {
   width: 100%;
+  padding: 20px 30px;
 }
 
-.fb-post-container{
-  padding: 10px;
-  width: 100%;
-  margin-top: 30px; /* To space rows apart */
-  display: flex;
-  display: -webkit-flex;
-}
-
-.comments {
+ul.comments {
+  padding-left: 0px;
   overflow-y: scroll;
-  height: 400px;
-  padding-bottom: 10px;
+  height: 50%;
   border-radius: 8px;
 }
 
 iframe {
-  width: 500px !important;
+  width: 350px !important;
+  float: right;
 }
 
-.fb-post {
-  /*width: 50%;*/
-/*  max-width: 500px;*/
-  padding: 30px;
-  float: left;
-  flex: 2; /* Using 2:1 */
+li.fb-post {  
+  display: inline-block;
+  padding: 10px 0px;
+  width: 400px;
+  list-style: none;
 }
 
-.extra-post-info {
-  /*margin-left: 50%;*/
-  overflow: hidden;
-  flex: 1; /* Using 2:1 */
-  padding-top: 30px;
+li.extra-post-info {
+  display: inline-block;
+  padding: 10px 30px 10px 20px;
+  width: 150px;
+  height: 400px;
 }
 
 .issue-tag-list {
@@ -152,7 +145,6 @@ iframe {
 .dropbtn {
     background-color: white;
     color: black;
-    /*padding: 16px;*/
     font-size: 16px;
     border: none;
     cursor: pointer;
