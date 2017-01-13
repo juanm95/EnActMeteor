@@ -98,6 +98,38 @@ Template.Page_Template.events({
     // Clear form
     target.text.value = '';
   },
+  'submit .remove-tag'(event){
+    // Prevent default browser form submit
+    event.preventDefault();
+    const target = event.target;
+    const tag = target.text.value;
+    const instance = Template.instance();
+    var tagExists = false;
+    Tags.find({_id:"alltags"}).forEach(
+      function(doc){
+        if(doc.tags.includes(tag)){
+          tagExists = true;
+        }
+      }
+    )
+    if( tagExists ) {
+      Tags.update(
+        {_id: "alltags"},
+        { $pull: { tags: tag } },
+      )
+      Issues.find({}).forEach(
+        function(doc){
+          id = doc._id;
+          Issues.update(
+            { _id : id },
+            { $pull: { tags: tag } }
+          )
+        }
+      )
+      instance.state.set(tag, false);
+      target.text.value = '';
+    }
+  },
   //Handle event of tag boxes being checked
   'change .checkBoxClass input'(event, instance) {
     var tag = event.target.name;
