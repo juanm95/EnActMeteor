@@ -62,8 +62,7 @@ Template.Page_Template.helpers({
         checkedTags.push(key);
       }
     });
-    console.log("Checked Tags:")
-    console.log(checkedTags)
+
     
     //Display issues which have all checked tags
     var query = {};
