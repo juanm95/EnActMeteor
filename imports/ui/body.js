@@ -22,12 +22,23 @@ Template.Page_Template.onCreated(function bodyOnCreated() {
 const issuesPerPage = 5;
 var pagesRequested = 1;
 
+function currentUserIsAdmin() {
+  var user = Meteor.user();
+    if(user != null){
+      return user.username === "admin";
+    }
+  return false;
+}
+
 Template.Page_Template.helpers({
   alltags() {
     var tags;
     Tags.find({}, {_id:0, tags:1}).forEach(function(doc){
       tags = doc.tags;
     });
+    if (currentUserIsAdmin() === true) {
+      tags.push("public")
+    }
     return tags;
   },
   currentUserIsAdmin() {
@@ -42,12 +53,17 @@ Template.Page_Template.helpers({
     //var checkedTags = get_selected_tag_filters(Template.instance);
     const instance = Template.instance();
     var checkedTags = [];
+    if (currentUserIsAdmin() !== true) {
+      checkedTags.push("public")
+    }
     var keysObj = instance.state.all();
     Object.keys(keysObj).forEach(function(key){
       if (key != "pagesRequested" && keysObj[key]){
         checkedTags.push(key);
       }
     });
+    console.log("Checked Tags:")
+    console.log(checkedTags)
     
     //Display issues which have all checked tags
     var query = {};
